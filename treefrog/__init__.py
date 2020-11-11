@@ -1,23 +1,21 @@
-"""A one line summary of the module or program, terminated by a period.
+import dis
+from pathlib import Path
+from typing import Generator
 
-Leave one blank line.  The rest of this docstring should contain an
-overall description of the module or program.  Optionally, it may also
-contain a brief description of exported classes and functions and/or usage
-examples.
-
-  Typical usage example:
-
-```python
-  foo = ClassFoo()
-  bar = foo.FunctionBar()
-```
-"""
+from slippi import Game
+from slippi.parse import ParseEvent, parse
 
 
-def repeat_string(s: str, n: int) -> str:
-    """Repeat a string an integer number of times!"""
-
-    return s * n
+def replays(folder_path: str):
+    return (str(p) for p in Path(folder_path).rglob("*.slp"))
 
 
-__all__ = ['repeat_string']
+def games(folder_path: str):
+    return (Game(r) for r in replays(folder_path))
+
+
+def select(gen: Generator): # TODO: Decompile to AST like Pony ORM
+    pass
+
+
+__all__ = ["select"]
