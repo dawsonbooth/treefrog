@@ -18,17 +18,17 @@ def clean(c):
 
 @task
 def lint(c):
-    c.run("pylint MODULE_NAME")
+    c.run("pylint treefrog")
 
 
 @task
 def test(c):
-    c.run("pytest MODULE_NAME/test")
+    c.run("pytest treefrog/test")
 
 
 @task
 def docs(c):
-    c.run("pydoc-markdown -p MODULE_NAME > docs/documentation.md")
+    c.run("pydoc-markdown -p treefrog > docs/documentation.md")
     copy("README.md", "docs/README.md")
     c.run("mkdocs build --clean")
 

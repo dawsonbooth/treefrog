@@ -1,4 +1,4 @@
-<a name="MODULE_NAME"></a>
+<a name="treefrog"></a>
 # MODULE\_NAME
 
 A one line summary of the module or program, terminated by a period.
@@ -15,7 +15,7 @@ examples.
   bar = foo.FunctionBar()
 ```
 
-<a name="MODULE_NAME.repeat_string"></a>
+<a name="treefrog.repeat_string"></a>
 #### repeat\_string
 
 ```python
@@ -24,12 +24,12 @@ repeat_string(s: str, n: int) -> str
 
 Repeat a string an integer number of times!
 
-<a name="MODULE_NAME.test"></a>
+<a name="treefrog.test"></a>
 # MODULE\_NAME.test
 
-<a name="MODULE_NAME.test.test_foo"></a>
+<a name="treefrog.test.test_foo"></a>
 # MODULE\_NAME.test.test\_foo
 
-<a name="MODULE_NAME.test.test_bar"></a>
+<a name="treefrog.test.test_bar"></a>
 # MODULE\_NAME.test.test\_bar
 

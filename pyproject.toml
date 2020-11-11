@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "PACKAGE_NAME"
+name = "treefrog"
 version = "0.0.1"
 description = ""
 authors = ["Dawson Booth <pypi@dawsonbooth.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/dawsonbooth/PACKAGE_NAME"
-repository = "https://github.com/dawsonbooth/PACKAGE_NAME"
+homepage = "https://github.com/dawsonbooth/treefrog"
+repository = "https://github.com/dawsonbooth/treefrog"
 keywords = []
 classifiers = [
     "Environment :: Console",
@@ -18,11 +18,11 @@ include = [
     "LICENSE",
 ]
 packages = [
-    { include = "MODULE_NAME" },
+    { include = "treefrog" },
 ]
 
 [tool.poetry.scripts]
-PACKAGE_NAME = 'MODULE_NAME.__main__:main'
+treefrog = 'treefrog.__main__:main'
 
 [tool.poetry.dependencies]
 python = "^3.6"

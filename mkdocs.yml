@@ -1,9 +1,9 @@
-site_name: PACKAGE_NAME
+site_name: treefrog
 nav:
   - Overview: README.md
   - Documentation: documentation.md
-repo_url: https://github.com/dawsonbooth/PACKAGE_NAME/
-site_url: https://dawsonbooth.github.io/PACKAGE_NAME/
+repo_url: https://github.com/dawsonbooth/treefrog/
+site_url: https://dawsonbooth.github.io/treefrog/
 
 markdown_extensions:
   - toc:
