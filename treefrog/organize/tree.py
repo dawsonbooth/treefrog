@@ -45,20 +45,20 @@ class Tree:
 
             self.destinations[i] = self.root
 
-            for level, member in enumerate(ordering):
-                if isinstance(member, Hierarchy.Level):
-                    attribute = attribute_map[member]
+            for rank, level in enumerate(ordering):
+                if isinstance(level, Hierarchy.Level):
+                    attribute = attribute_map[level]
 
-                    if format and format[level]:
-                        self.destinations[i] /= format[level](attribute)
+                    if format and format[rank]:
+                        self.destinations[i] /= format[rank](attribute)
                     else:
                         self.destinations[i] /= default_format(attribute)
-                elif isinstance(member, Iterable) and not isinstance(member, str):
-                    peers = member
+                elif isinstance(level, Iterable) and not isinstance(level, str):
+                    peers = level
                     attributes = ((attribute_map[peer] for peer in peers))
 
-                    if format and format[level]:
-                        self.destinations[i] /= format[level](*attributes)
+                    if format and format[rank]:
+                        self.destinations[i] /= format[rank](*attributes)
                     else:
                         self.destinations[i] /= default_format(*attributes)
 
