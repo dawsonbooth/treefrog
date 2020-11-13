@@ -11,14 +11,14 @@ from slippi.id import Stage
 from tqdm import tqdm
 
 # 0. Settings
-replay_folder = "slp"
+root_folder = "slp"
 netplay_code = "DTB#566"
 x, y = list(), list()
 
 
 # 1. Get games
-replays = [str(p) for p in Path(replay_folder).rglob("*.slp")]
-games = (slippi.Game(r) for r in replays)
+game_files = [str(p) for p in Path(root_folder).rglob("*.slp")]
+games = (slippi.Game(r) for r in game_files)
 games = (game for game in games if game.start.stage == Stage.BATTLEFIELD)
 
 for game in tqdm(games):
