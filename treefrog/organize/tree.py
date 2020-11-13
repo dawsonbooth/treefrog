@@ -9,6 +9,8 @@ from .format import format as default_format
 from .format import rename as default_rename
 from .hierarchy import Hierarchy, default_ordering, get_members
 
+from slippi.parse import ParseError
+
 
 class Tree:
     root: Path
@@ -26,15 +28,21 @@ class Tree:
         self,
         ordering: Hierarchy.Ordering = default_ordering,
         format: Iterable[Callable] = None,
-        rename: Union[Callable, bool] = None,
         show_progress: bool = False
     ):
-        sources = self.sources
+        destinations = self.destinations
         if show_progress:
-            sources = tqdm(self.sources)
+            destinations = tqdm(self.destinations)
 
-        for i, source in enumerate(sources):
-            members = get_members(source, self.netplay_code)
+        for i, destination in enumerate(destinations):
+            source = self.sources[i]
+
+            try:
+                members = get_members(source, self.netplay_code)
+            except ParseError:
+                self.destinations[i] = self.root / \
+                    "Unorganized" / destination.name
+                continue
 
             self.destinations[i] = self.root
 
@@ -55,23 +63,33 @@ class Tree:
                     else:
                         self.destinations[i] /= default_format(*attributes)
 
-            if rename is not None:
-                if isinstance(rename, Callable):
-                    self.destinations[i] /= rename(source.name, members)
-                elif isinstance(rename, bool) and rename:
-                    self.destinations[i] /= default_rename(
-                        source.name, members
-                    )
-            else:
-                self.destinations[i] /= source.name
+            self.destinations[i] /= destination.name
 
     def flatten(self, show_progress):
-        sources = self.sources
+        destinations = self.destinations
         if show_progress:
-            sources = tqdm(self.sources)
+            destinations = tqdm(self.destinations)
 
-        for i, source in enumerate(sources):
-            self.destinations[i] = self.root / source.name
+        for i, destination in enumerate(destinations):
+            self.destinations[i] = self.root / destination.name
+
+    def rename(self, rename_func=default_rename, show_progress=False):
+        destinations = self.destinations
+        if show_progress:
+            destinations = tqdm(self.destinations)
+
+        for i, destination in enumerate(destinations):
+            source = self.sources[i]
+
+            try:
+                members = get_members(source, self.netplay_code)
+            except ParseError:
+                self.destinations[i] = self.root / \
+                    "Unorganized" / destination.name
+                continue
+
+            new_name = rename_func(destination.name, members)
+            self.destinations[i] = destination.parent / new_name
 
     def resolve(self, show_progress=False):
         sources = self.sources
