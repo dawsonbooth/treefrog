@@ -1,105 +1,76 @@
-import shutil
 import os
-from enum import Enum
+import shutil
 from pathlib import Path
-from typing import Iterable, List, Tuple
-from slippi.event import Start
-from slippi.metadata import Metadata
-from slippi.parse import parse, ParseEvent
+from typing import Iterable, List
+
 from tqdm import tqdm
 
+from .attribute import GameAttribute, get_attribute_map
+from .format import format as default_format
 
-class ReplayAttribute(Enum):
-    STAGE = 0
-    NAME = 1
-    CODE = 2
-    CHARACTER = 3
-    OPPONENT_NAME = 5
-    OPPONENT_CODE = 6
-    OPPONENT_CHARACTER = 7
-
-
-default_precedence = (
-    ReplayAttribute.OPPONENT_CODE,
+default_hierarchy = (
+    GameAttribute.OPPONENT_CODE,
     (
-        ReplayAttribute.CHARACTER,
-        ReplayAttribute.OPPONENT_CHARACTER
+        GameAttribute.CHARACTER,
+        GameAttribute.OPPONENT_CHARACTER
     ),
-    ReplayAttribute.STAGE
+    GameAttribute.STAGE
 )
 
 
-def get_attributes(replay_path: str, netplay_code: str):
-    attributes = {
-        ReplayAttribute.CODE: netplay_code
-    }
-
-    def parse_start(start: Start):
-        attributes[ReplayAttribute.STAGE] = start.stage.name
-
-    def parse_metadata(metadata: Metadata):
-        for player in metadata.players:
-            if player is not None:
-                if player.netplay.code == netplay_code:
-                    attributes[ReplayAttribute.NAME] = player.netplay.name
-                    attributes[ReplayAttribute.CHARACTER] = sorted(
-                        player.characters.keys(),
-                        key=lambda c: player.characters[c]
-                    )[0].name  # TODO: Prettify string
-                else:
-                    attributes[ReplayAttribute.OPPONENT_CODE] = player.netplay.code
-                    attributes[ReplayAttribute.OPPONENT_NAME] = player.netplay.name
-                    attributes[ReplayAttribute.OPPONENT_CHARACTER] = sorted(
-                        player.characters.keys(),
-                        key=lambda c: player.characters[c]
-                    )[0].name  # TODO: Prettify string
-
-    handlers = {
-        ParseEvent.START: parse_start,
-        ParseEvent.METADATA: parse_metadata
-    }
-
-    parse(str(replay_path), handlers)
-
-    return attributes
-
-
-class ReplayFileTree:
+class GameFileTree:
     root: Path
     sources: List[Path]
     destinations: List[Path]
     netplay_code: str
 
-    def __init__(self, replay_folder: str, netplay_code: str):
-        self.root = Path(replay_folder)
+    def __init__(self, root_folder: str, netplay_code: str):
+        self.root = Path(root_folder)
         self.sources = list(self.root.rglob("*.slp"))
         self.destinations = list(p for p in self.sources)
-
         self.netplay_code = netplay_code
 
-    def organize(self, precedence=default_precedence):
-        for i, source in enumerate(tqdm(self.sources)):  # TODO: Remove progress
-            attributes = get_attributes(source, self.netplay_code)
+    def organize(self, hierarchy=default_hierarchy, format=None, show_progress=False):
+        sources = self.sources
+        if show_progress:
+            sources = tqdm(self.sources)
+
+        for i, source in enumerate(sources):
+            attribute_map = get_attribute_map(source, self.netplay_code)
 
             self.destinations[i] = self.root
 
-            for a_type in precedence:
-                if isinstance(a_type, ReplayAttribute):
-                    self.destinations[i] /= attributes[a_type]
-                elif isinstance(a_type, Iterable):
-                    # TODO: Format string based on attributes
-                    self.destinations[i] /= " vs ".join(
-                        attributes[a_type] for a_type in a_type
-                    )
+            for j, level in enumerate(hierarchy):
+                attributes = None
+                if isinstance(level, GameAttribute):
+                    attributes = (attribute_map[level],)
+                elif isinstance(level, Iterable) and not isinstance(level, str):
+                    attributes = ((attribute_map[a_type] for a_type in level))
 
-            self.destinations[i] /= source.parts[-1]
+                folder_name = ""
+                if format and format[j]:
+                    folder_name = format[j](*attributes)
+                else:
+                    folder_name = default_format(*attributes)
 
-    def flatten(self):
-        for i, source in enumerate(self.sources):
-            self.destinations[i] = self.root / source.parts[-1]
+                self.destinations[i] /= folder_name
 
-    def resolve(self):
-        for i, source in enumerate(self.sources):
+            self.destinations[i] /= source.name
+
+    def flatten(self, show_progress):
+        sources = self.sources
+        if show_progress:
+            sources = tqdm(self.sources)
+
+        for i, source in enumerate(sources):
+            self.destinations[i] = self.root / source.name
+
+    def resolve(self, show_progress=False):
+        sources = self.sources
+        if show_progress:
+            sources = tqdm(self.sources)
+
+        for i, source in enumerate(sources):
             destination = self.destinations[i]
             os.makedirs(destination.parent, exist_ok=True)
             shutil.move(source, destination)
