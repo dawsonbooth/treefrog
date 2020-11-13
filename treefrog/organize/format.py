@@ -1,4 +1,8 @@
+from typing import Any, Dict
+
 from slippi.id import InGameCharacter, Stage
+
+from .hierarchy import Hierarchy
 
 
 def character_name(character: InGameCharacter):
@@ -38,3 +42,10 @@ def format(*attributes) -> str:
 
     elif len(set(types)) == 1 and types[0] == str:
         return f"{attributes[0]} vs {attributes[1]}"
+
+
+def rename(name, members: Dict[Hierarchy.Level, Any]):
+    return " vs ".join((
+        f"[{members[Hierarchy.Level.CODE]}] {members[Hierarchy.Level.NAME]} ({character_name(members[Hierarchy.Level.CHARACTER])})",
+        f"[{members[Hierarchy.Level.OPPONENT_CODE]}] {members[Hierarchy.Level.OPPONENT_NAME]} ({character_name(members[Hierarchy.Level.OPPONENT_CHARACTER])})"
+    )) + f" - {stage_name(members[Hierarchy.Level.STAGE])}" + f".{name.split('.')[-1]}"

@@ -1,11 +1,12 @@
 import os
 import shutil
 from pathlib import Path
-from typing import Callable, Iterable, List
+from typing import Callable, Iterable, List, Union
 
 from tqdm import tqdm
 
 from .format import format as default_format
+from .format import rename as default_rename
 from .hierarchy import Hierarchy, get_members
 
 default_ordering: Hierarchy.Ordering = (
@@ -34,6 +35,7 @@ class Tree:
         self,
         ordering: Hierarchy.Ordering = default_ordering,
         format: Iterable[Callable] = None,
+        rename: Union[Callable, bool] = None,
         show_progress: bool = False
     ):
         sources = self.sources
@@ -41,13 +43,13 @@ class Tree:
             sources = tqdm(self.sources)
 
         for i, source in enumerate(sources):
-            attribute_map = get_members(source, self.netplay_code)
+            members = get_members(source, self.netplay_code)
 
             self.destinations[i] = self.root
 
             for rank, level in enumerate(ordering):
                 if isinstance(level, Hierarchy.Level):
-                    attribute = attribute_map[level]
+                    attribute = members[level]
 
                     if format and format[rank]:
                         self.destinations[i] /= format[rank](attribute)
@@ -55,14 +57,22 @@ class Tree:
                         self.destinations[i] /= default_format(attribute)
                 elif isinstance(level, Iterable) and not isinstance(level, str):
                     peers = level
-                    attributes = ((attribute_map[peer] for peer in peers))
+                    attributes = ((members[peer] for peer in peers))
 
                     if format and format[rank]:
                         self.destinations[i] /= format[rank](*attributes)
                     else:
                         self.destinations[i] /= default_format(*attributes)
 
-            self.destinations[i] /= source.name
+            if rename is not None:
+                if isinstance(rename, Callable):
+                    self.destinations[i] /= rename(source.name, members)
+                elif isinstance(rename, bool) and rename:
+                    self.destinations[i] /= default_rename(
+                        source.name, members
+                    )
+            else:
+                self.destinations[i] /= source.name
 
     def flatten(self, show_progress):
         sources = self.sources

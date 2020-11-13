@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Iterable, Union
+from typing import Any, Dict, Iterable, Union
 
 from slippi.event import Start
 from slippi.metadata import Metadata
@@ -20,7 +20,7 @@ class Hierarchy():
         pass
 
 
-def get_members(game_path: str, netplay_code: str):
+def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]:
     attributes = {
         Hierarchy.Level.CODE: netplay_code
     }
