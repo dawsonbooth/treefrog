@@ -1,11 +1,10 @@
-
-from . import GameFileTree, Hierarchy
+from . import Hierarchy, Tree
 
 if __name__ == "__main__":
-    folder_path = "slp"
+    root_folder = "slp"
     netplay_code = "DTB#566"
 
-    tree = GameFileTree(folder_path, netplay_code)
+    tree = Tree(root_folder, netplay_code)
 
     ordering = (
         Hierarchy.Level.OPPONENT_CODE,
