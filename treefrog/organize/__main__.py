@@ -1,5 +1,5 @@
 
-from . import GameFileTree, GameAttribute
+from . import GameFileTree, Hierarchy
 
 if __name__ == "__main__":
     folder_path = "slp"
@@ -7,16 +7,16 @@ if __name__ == "__main__":
 
     tree = GameFileTree(folder_path, netplay_code)
 
-    hierarchy = (
-        GameAttribute.STAGE,
+    ordering = (
+        Hierarchy.Level.OPPONENT_CODE,
         (
-            GameAttribute.CHARACTER,
-            GameAttribute.OPPONENT_CHARACTER
+            Hierarchy.Level.CHARACTER,
+            Hierarchy.Level.OPPONENT_CHARACTER
         ),
-        GameAttribute.OPPONENT_CODE
+        Hierarchy.Level.STAGE,
     )
 
-    # tree.organize(hierarchy, show_progress=True)
+    # tree.organize(ordering, show_progress=True)
 
     tree.flatten(show_progress=True)
 

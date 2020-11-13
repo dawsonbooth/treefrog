@@ -1,20 +1,20 @@
 import os
 import shutil
 from pathlib import Path
-from typing import Iterable, List
+from typing import Callable, Iterable, List
 
 from tqdm import tqdm
 
-from .attribute import GameAttribute, get_attribute_map
 from .format import format as default_format
+from .hierarchy import Hierarchy, get_members
 
-default_hierarchy = (
-    GameAttribute.OPPONENT_CODE,
+default_ordering: Hierarchy.Ordering = (
+    Hierarchy.Level.OPPONENT_CODE,
     (
-        GameAttribute.CHARACTER,
-        GameAttribute.OPPONENT_CHARACTER
+        Hierarchy.Level.CHARACTER,
+        Hierarchy.Level.OPPONENT_CHARACTER
     ),
-    GameAttribute.STAGE
+    Hierarchy.Level.STAGE
 )
 
 
@@ -30,30 +30,37 @@ class GameFileTree:
         self.destinations = list(p for p in self.sources)
         self.netplay_code = netplay_code
 
-    def organize(self, hierarchy=default_hierarchy, format=None, show_progress=False):
+    def organize(
+        self,
+        ordering: Hierarchy.Ordering = default_ordering,
+        format: Iterable[Callable] = None,
+        show_progress: bool = False
+    ):
         sources = self.sources
         if show_progress:
             sources = tqdm(self.sources)
 
         for i, source in enumerate(sources):
-            attribute_map = get_attribute_map(source, self.netplay_code)
+            attribute_map = get_members(source, self.netplay_code)
 
             self.destinations[i] = self.root
 
-            for j, level in enumerate(hierarchy):
-                attributes = None
-                if isinstance(level, GameAttribute):
-                    attributes = (attribute_map[level],)
-                elif isinstance(level, Iterable) and not isinstance(level, str):
-                    attributes = ((attribute_map[a_type] for a_type in level))
+            for level, member in enumerate(ordering):
+                if isinstance(member, Hierarchy.Level):
+                    attribute = attribute_map[member]
 
-                folder_name = ""
-                if format and format[j]:
-                    folder_name = format[j](*attributes)
-                else:
-                    folder_name = default_format(*attributes)
+                    if format and format[level]:
+                        self.destinations[i] /= format[level](attribute)
+                    else:
+                        self.destinations[i] /= default_format(attribute)
+                elif isinstance(member, Iterable) and not isinstance(member, str):
+                    peers = member
+                    attributes = ((attribute_map[peer] for peer in peers))
 
-                self.destinations[i] /= folder_name
+                    if format and format[level]:
+                        self.destinations[i] /= format[level](*attributes)
+                    else:
+                        self.destinations[i] /= default_format(*attributes)
 
             self.destinations[i] /= source.name
 
@@ -76,5 +83,5 @@ class GameFileTree:
             shutil.move(source, destination)
 
         for f in self.root.rglob("*"):
-            if f.is_dir() and len(list(f.rglob("*.slp"))) == 0:
+            if f.is_dir() and len(tuple(f.rglob("*.slp"))) == 0:
                 shutil.rmtree(f)
