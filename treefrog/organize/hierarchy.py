@@ -53,3 +53,13 @@ def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]
     parse(str(game_path), handlers)
 
     return attributes
+
+
+default_ordering: Hierarchy.Ordering = (
+    Hierarchy.Level.OPPONENT_CODE,
+    (
+        Hierarchy.Level.CHARACTER,
+        Hierarchy.Level.OPPONENT_CHARACTER
+    ),
+    Hierarchy.Level.STAGE
+)

@@ -7,16 +7,7 @@ from tqdm import tqdm
 
 from .format import format as default_format
 from .format import rename as default_rename
-from .hierarchy import Hierarchy, get_members
-
-default_ordering: Hierarchy.Ordering = (
-    Hierarchy.Level.OPPONENT_CODE,
-    (
-        Hierarchy.Level.CHARACTER,
-        Hierarchy.Level.OPPONENT_CHARACTER
-    ),
-    Hierarchy.Level.STAGE
-)
+from .hierarchy import Hierarchy, default_ordering, get_members
 
 
 class Tree:
