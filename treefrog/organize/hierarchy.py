@@ -8,10 +8,10 @@ from slippi.parse import ParseEvent, parse
 
 class Hierarchy():
     class Level(Enum):
-        STAGE = 0
-        NAME = 1
-        CODE = 2
-        CHARACTER = 3
+        STAGE = 1
+        NAME = 2
+        CODE = 3
+        CHARACTER = 4
         OPPONENT_NAME = 5
         OPPONENT_CODE = 6
         OPPONENT_CHARACTER = 7
