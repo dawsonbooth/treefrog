@@ -1,15 +1,15 @@
 import os
+import re
 import shutil
 from pathlib import Path
-from typing import Callable, Iterable, List, Union
+from typing import Callable, Iterable, List
 
+from slippi.parse import ParseError
 from tqdm import tqdm
 
 from .format import format as default_format
 from .format import rename as default_rename
 from .hierarchy import Hierarchy, default_ordering, get_members
-
-from slippi.parse import ParseError
 
 
 class Tree:
@@ -88,7 +88,8 @@ class Tree:
                     "Unorganized" / destination.name
                 continue
 
-            new_name = rename_func(destination.name, members)
+            new_name = re.sub(r'[\\/:"*?<>|]+', "",
+                              rename_func(destination.name, members))
             self.destinations[i] = destination.parent / new_name
 
     def resolve(self, show_progress=False):
