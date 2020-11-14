@@ -32,7 +32,7 @@ class Tree:
     ):
         destinations = self.destinations
         if show_progress:
-            destinations = tqdm(self.destinations)
+            destinations = tqdm(self.destinations, desc="Organize")
 
         for i, destination in enumerate(destinations):
             source = self.sources[i]
@@ -41,7 +41,7 @@ class Tree:
                 members = get_members(source, self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
-                    "Unorganized" / destination.name
+                    "Error" / destination.name
                 continue
 
             self.destinations[i] = self.root
@@ -68,7 +68,7 @@ class Tree:
     def flatten(self, show_progress):
         destinations = self.destinations
         if show_progress:
-            destinations = tqdm(self.destinations)
+            destinations = tqdm(self.destinations, desc="Flatten")
 
         for i, destination in enumerate(destinations):
             self.destinations[i] = self.root / destination.name
@@ -76,7 +76,7 @@ class Tree:
     def rename(self, rename_func=default_rename, show_progress=False):
         destinations = self.destinations
         if show_progress:
-            destinations = tqdm(self.destinations)
+            destinations = tqdm(self.destinations, desc="Rename")
 
         for i, destination in enumerate(destinations):
             source = self.sources[i]
@@ -85,22 +85,38 @@ class Tree:
                 members = get_members(source, self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
-                    "Unorganized" / destination.name
+                    "Error" / destination.name
                 continue
 
-            new_name = re.sub(r'[\\/:"*?<>|]+', "",
-                              rename_func(destination.name, members))
+            new_name = rename_func(destination.name, members)
+            new_name = re.sub(r'[\\/:"*?<>|]+', "", new_name)
+
             self.destinations[i] = destination.parent / new_name
 
     def resolve(self, show_progress=False):
         sources = self.sources
         if show_progress:
-            sources = tqdm(self.sources)
+            sources = tqdm(self.sources, desc="Resolve")
 
         for i, source in enumerate(sources):
             destination = self.destinations[i]
+
+            n = 0
+            new_name = destination.name
+            while True:
+                renamed = False
+                for j, other in enumerate(self.destinations):
+                    if new_name == other.name and i != j:
+                        n += 1
+                        renamed = True
+                        new_name = f"{destination.stem} ({n}){destination.suffix}"
+
+                if not renamed:
+                    self.destinations[i] = destination.parent / new_name
+                    break
+
             os.makedirs(destination.parent, exist_ok=True)
-            shutil.move(source, destination)
+            shutil.move(source, self.destinations[i])
 
         for f in self.root.rglob("*"):
             if f.is_dir() and len(tuple(f.rglob("*.slp"))) == 0:
