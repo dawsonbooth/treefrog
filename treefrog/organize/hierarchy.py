@@ -21,12 +21,12 @@ class Hierarchy():
 
 
 def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]:
-    attributes = {
+    members = {
         Hierarchy.Level.CODE: netplay_code
     }
 
     def parse_start(start: Start):
-        attributes[Hierarchy.Level.STAGE] = start.stage
+        members[Hierarchy.Level.STAGE] = start.stage
 
     def parse_metadata(metadata: Metadata):
         for player in metadata.players:
@@ -38,12 +38,12 @@ def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]
                     key=lambda c: player.characters[c]
                 )[0]
                 if code == netplay_code:
-                    attributes[Hierarchy.Level.NAME] = name
-                    attributes[Hierarchy.Level.CHARACTER] = character
+                    members[Hierarchy.Level.NAME] = name
+                    members[Hierarchy.Level.CHARACTER] = character
                 else:
-                    attributes[Hierarchy.Level.OPPONENT_CODE] = code
-                    attributes[Hierarchy.Level.OPPONENT_NAME] = name
-                    attributes[Hierarchy.Level.OPPONENT_CHARACTER] = character
+                    members[Hierarchy.Level.OPPONENT_CODE] = code
+                    members[Hierarchy.Level.OPPONENT_NAME] = name
+                    members[Hierarchy.Level.OPPONENT_CHARACTER] = character
 
     handlers = {
         ParseEvent.START: parse_start,
@@ -52,7 +52,7 @@ def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]
 
     parse(str(game_path), handlers)
 
-    return attributes
+    return members
 
 
 default_ordering: Hierarchy.Ordering = (
