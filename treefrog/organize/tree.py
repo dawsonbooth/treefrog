@@ -29,7 +29,7 @@ class Tree:
         ordering: Hierarchy.Ordering = default_ordering,
         format: Iterable[Callable] = None,
         show_progress: bool = False
-    ):
+    ) -> None:
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Organize")
@@ -65,7 +65,7 @@ class Tree:
 
             self.destinations[i] /= destination.name
 
-    def flatten(self, show_progress):
+    def flatten(self, show_progress) -> None:
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Flatten")
@@ -73,7 +73,7 @@ class Tree:
         for i, destination in enumerate(destinations):
             self.destinations[i] = self.root / destination.name
 
-    def rename(self, rename_func=default_rename, show_progress=False):
+    def rename(self, rename_func=default_rename, show_progress=False) -> None:
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Rename")
@@ -93,7 +93,7 @@ class Tree:
 
             self.destinations[i] = destination.parent / new_name
 
-    def resolve(self, show_progress=False):
+    def resolve(self, show_progress=False) -> None:
         sources = self.sources
         if show_progress:
             sources = tqdm(self.sources, desc="Resolve")

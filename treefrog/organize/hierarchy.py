@@ -16,8 +16,7 @@ class Hierarchy():
         OPPONENT_CODE = 6
         OPPONENT_CHARACTER = 7
 
-    class Ordering (Iterable[Union[Level, Iterable[Level]]]):
-        pass
+    Ordering = Iterable[Union[Level, Iterable[Level]]]
 
 
 def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]:

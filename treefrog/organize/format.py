@@ -5,7 +5,7 @@ from slippi.id import InGameCharacter, Stage
 from .hierarchy import Hierarchy
 
 
-def character_name(character: InGameCharacter):
+def character_name(character: InGameCharacter) -> str:
     if character == InGameCharacter.DR_MARIO:
         return "Dr. Mario"
     elif character == InGameCharacter.GAME_AND_WATCH:
@@ -15,7 +15,7 @@ def character_name(character: InGameCharacter):
     return character.name.replace("_", " ").title()
 
 
-def stage_name(stage: Stage):
+def stage_name(stage: Stage) -> str:
     if stage == Stage.FOUNTAIN_OF_DREAMS:
         return "Fountain of Dreams"
     elif stage == Stage.YOSHIS_STORY:
@@ -44,7 +44,7 @@ def format(*attributes) -> str:
         return f"{attributes[0]} vs {attributes[1]}"
 
 
-def rename(name, members: Dict[Hierarchy.Level, Any]):
+def rename(name, members: Dict[Hierarchy.Level, Any]) -> str:
     return " vs ".join((
         f"[{members[Hierarchy.Level.CODE]}] {members[Hierarchy.Level.NAME]} ({character_name(members[Hierarchy.Level.CHARACTER])})",
         f"[{members[Hierarchy.Level.OPPONENT_CODE]}] {members[Hierarchy.Level.OPPONENT_NAME]} ({character_name(members[Hierarchy.Level.OPPONENT_CHARACTER])})"
