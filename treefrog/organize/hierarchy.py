@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, auto
 from typing import Any, Dict, Iterable, Union
 
 from slippi.event import Start
@@ -8,19 +8,19 @@ from slippi.parse import ParseEvent, parse
 
 class Hierarchy():
     class Level(Enum):
-        STAGE = 1
-        NAME = 2
-        CODE = 3
-        CHARACTER = 4
-        OPPONENT_NAME = 5
-        OPPONENT_CODE = 6
-        OPPONENT_CHARACTER = 7
+        STAGE = auto()
+        NAME = auto()
+        CODE = auto()
+        CHARACTER = auto()
+        OPPONENT_NAME = auto()
+        OPPONENT_CODE = auto()
+        OPPONENT_CHARACTER = auto()
 
     Ordering = Iterable[Union[Level, Iterable[Level]]]
 
 
 def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]:
-    members = {
+    members: Dict[Hierarchy.Level, Any] = {
         Hierarchy.Level.CODE: netplay_code
     }
 
