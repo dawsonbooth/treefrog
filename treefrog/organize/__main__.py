@@ -1,10 +1,12 @@
 import argparse
 from pathlib import Path
 
-from . import Hierarchy, Tree
+from . import Tree
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Organize replay folder')
+    parser = argparse.ArgumentParser(
+        description='Organize the Slippi game files in your filesystem according to their attributes'
+    )
     group = parser.add_mutually_exclusive_group()
     parser.add_argument('root_folder', type=Path,
                         help='Slippi folder root path')
@@ -23,23 +25,10 @@ if __name__ == "__main__":
 
     tree = Tree(args.root_folder, args.netplay_code)
 
-    ordering = (
-        (
-            Hierarchy.Member.YEAR,
-            Hierarchy.Member.MONTH
-        ),
-        Hierarchy.Member.OPPONENT_CODE,
-        (
-            Hierarchy.Member.CHARACTER,
-            Hierarchy.Member.OPPONENT_CHARACTER
-        ),
-        Hierarchy.Member.STAGE,
-    )
-
     if args.flatten:
         tree.flatten(show_progress=args.show_progress)
     if args.organize:
-        tree.organize(ordering, show_progress=args.show_progress)
+        tree.organize(show_progress=args.show_progress)
     if args.rename:
         tree.rename(show_progress=args.show_progress)
 
