@@ -8,13 +8,13 @@ from slippi.parse import ParseEvent, parse
 
 class Hierarchy():
     class Member(Enum):
-        STAGE = auto()
         NAME = auto()
         CODE = auto()
         CHARACTER = auto()
         OPPONENT_NAME = auto()
         OPPONENT_CODE = auto()
         OPPONENT_CHARACTER = auto()
+        STAGE = auto()
         YEAR = auto()
         MONTH = auto()
         DAY = auto()
@@ -67,11 +67,15 @@ def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, 
     return members
 
 
-default_ordering: Hierarchy.Ordering = (
+default_ordering = (
+    (
+        Hierarchy.Member.YEAR,
+        Hierarchy.Member.MONTH
+    ),
     Hierarchy.Member.OPPONENT_CODE,
     (
         Hierarchy.Member.CHARACTER,
         Hierarchy.Member.OPPONENT_CHARACTER
     ),
-    Hierarchy.Member.STAGE
+    Hierarchy.Member.STAGE,
 )
