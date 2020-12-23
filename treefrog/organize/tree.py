@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from .format import format as default_format
 from .format import rename as default_rename
-from .hierarchy import Hierarchy, default_ordering, get_members
+from .hierarchy import Hierarchy, default_ordering, get_attributes
 
 
 class Tree:
@@ -38,7 +38,8 @@ class Tree:
             source = self.sources[i]
 
             try:
-                members = get_members(source, self.netplay_code)
+                member_attributes = get_attributes(
+                    str(source), self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
                     "Error" / destination.name
@@ -47,21 +48,23 @@ class Tree:
             self.destinations[i] = self.root
 
             for rank, level in enumerate(ordering):
-                if isinstance(level, Hierarchy.Level):
-                    attribute = members[level]
+                if isinstance(level, Hierarchy.Member):
+                    attribute = member_attributes[level]
 
                     if format and format[rank]:
                         self.destinations[i] /= format[rank](attribute)
                     else:
-                        self.destinations[i] /= default_format(attribute)
-                elif isinstance(level, Iterable) and not isinstance(level, str):
-                    peers = level
-                    attributes = ((members[peer] for peer in peers))
+                        self.destinations[i] /= default_format(
+                            level, attribute)
+                elif isinstance(level, Iterable):
+                    attributes = tuple(
+                        member_attributes[peer] for peer in level)
 
                     if format and format[rank]:
-                        self.destinations[i] /= format[rank](*attributes)
+                        self.destinations[i] /= format[rank](attributes)
                     else:
-                        self.destinations[i] /= default_format(*attributes)
+                        self.destinations[i] /= default_format(
+                            level, attributes)
 
             self.destinations[i] /= destination.name
 
@@ -82,13 +85,14 @@ class Tree:
             source = self.sources[i]
 
             try:
-                members = get_members(source, self.netplay_code)
+                member_attributes = get_attributes(
+                    str(source), self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
                     "Error" / destination.name
                 continue
 
-            new_name = rename_func(destination.name, members)
+            new_name = rename_func(destination.name, member_attributes)
             new_name = re.sub(r'[\\/:"*?<>|]+', "", new_name)
 
             self.destinations[i] = destination.parent / new_name
@@ -118,6 +122,7 @@ class Tree:
             os.makedirs(destination.parent, exist_ok=True)
             shutil.move(source, self.destinations[i])
 
-        for f in self.root.rglob("*"):
-            if f.is_dir() and len(tuple(f.rglob("*.slp"))) == 0:
-                shutil.rmtree(f)
+        for d in self.root.rglob("*"):
+            if d.is_dir() and len([f for f in d.rglob("*") if not f.is_dir()]) == 0:
+                if d.exists():
+                    shutil.rmtree(d)

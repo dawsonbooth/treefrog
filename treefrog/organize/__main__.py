@@ -24,12 +24,16 @@ if __name__ == "__main__":
     tree = Tree(args.root_folder, args.netplay_code)
 
     ordering = (
-        Hierarchy.Level.OPPONENT_CODE,
         (
-            Hierarchy.Level.CHARACTER,
-            Hierarchy.Level.OPPONENT_CHARACTER
+            Hierarchy.Member.YEAR,
+            Hierarchy.Member.MONTH
         ),
-        Hierarchy.Level.STAGE,
+        Hierarchy.Member.OPPONENT_CODE,
+        (
+            Hierarchy.Member.CHARACTER,
+            Hierarchy.Member.OPPONENT_CHARACTER
+        ),
+        Hierarchy.Member.STAGE,
     )
 
     if args.flatten:

@@ -7,7 +7,7 @@ from slippi.parse import ParseEvent, parse
 
 
 class Hierarchy():
-    class Level(Enum):
+    class Member(Enum):
         STAGE = auto()
         NAME = auto()
         CODE = auto()
@@ -15,17 +15,24 @@ class Hierarchy():
         OPPONENT_NAME = auto()
         OPPONENT_CODE = auto()
         OPPONENT_CHARACTER = auto()
+        YEAR = auto()
+        MONTH = auto()
+        DAY = auto()
+        HOUR = auto()
+        MINUTE = auto()
+        SECOND = auto()
 
-    Ordering = Iterable[Union[Level, Iterable[Level]]]
+    Level = Union[Member, Iterable[Member]]
+    Ordering = Iterable[Level]
 
 
-def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]:
-    members: Dict[Hierarchy.Level, Any] = {
-        Hierarchy.Level.CODE: netplay_code
+def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, Any]:
+    members: Dict[Hierarchy.Member, Any] = {
+        Hierarchy.Member.CODE: netplay_code
     }
 
     def parse_start(start: Start):
-        members[Hierarchy.Level.STAGE] = start.stage
+        members[Hierarchy.Member.STAGE] = start.stage
 
     def parse_metadata(metadata: Metadata):
         for player in metadata.players:
@@ -37,28 +44,34 @@ def get_members(game_path: str, netplay_code: str) -> Dict[Hierarchy.Level, Any]
                     key=lambda c: player.characters[c]
                 )[0]
                 if code == netplay_code:
-                    members[Hierarchy.Level.NAME] = name
-                    members[Hierarchy.Level.CHARACTER] = character
+                    members[Hierarchy.Member.NAME] = name
+                    members[Hierarchy.Member.CHARACTER] = character
                 else:
-                    members[Hierarchy.Level.OPPONENT_CODE] = code
-                    members[Hierarchy.Level.OPPONENT_NAME] = name
-                    members[Hierarchy.Level.OPPONENT_CHARACTER] = character
+                    members[Hierarchy.Member.OPPONENT_CODE] = code
+                    members[Hierarchy.Member.OPPONENT_NAME] = name
+                    members[Hierarchy.Member.OPPONENT_CHARACTER] = character
+        members[Hierarchy.Member.YEAR] = metadata.date.year
+        members[Hierarchy.Member.MONTH] = metadata.date.month
+        members[Hierarchy.Member.DAY] = metadata.date.day
+        members[Hierarchy.Member.HOUR] = metadata.date.hour
+        members[Hierarchy.Member.MINUTE] = metadata.date.minute
+        members[Hierarchy.Member.SECOND] = metadata.date.second
 
     handlers = {
         ParseEvent.START: parse_start,
         ParseEvent.METADATA: parse_metadata
     }
 
-    parse(str(game_path), handlers)
+    parse(game_path, handlers)
 
     return members
 
 
 default_ordering: Hierarchy.Ordering = (
-    Hierarchy.Level.OPPONENT_CODE,
+    Hierarchy.Member.OPPONENT_CODE,
     (
-        Hierarchy.Level.CHARACTER,
-        Hierarchy.Level.OPPONENT_CHARACTER
+        Hierarchy.Member.CHARACTER,
+        Hierarchy.Member.OPPONENT_CHARACTER
     ),
-    Hierarchy.Level.STAGE
+    Hierarchy.Member.STAGE
 )
