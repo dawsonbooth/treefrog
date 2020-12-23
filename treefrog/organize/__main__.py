@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--rename', action='store_true',
                         help='Whether to rename the files according to the game attributes')
     parser.add_argument('-p', '--show-progress', action='store_true',
-                        help='Whether to rename the files according to the game attributes')
+                        help='Whether to show a progress bar')
 
     args = parser.parse_args()
 
