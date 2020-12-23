@@ -7,8 +7,7 @@ from typing import Callable, Iterable, List
 from slippi.parse import ParseError
 from tqdm import tqdm
 
-from .format import format as default_format
-from .format import rename as default_rename
+from .format import default_format, default_rename
 from .hierarchy import Hierarchy, default_ordering, get_attributes
 
 
@@ -27,9 +26,9 @@ class Tree:
     def organize(
         self,
         ordering: Hierarchy.Ordering = default_ordering,
-        format: Iterable[Callable] = None,
+        formatting: Iterable[Callable] = None,
         show_progress: bool = False
-    ) -> None:
+    ) -> "Tree":
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Organize")
@@ -51,8 +50,8 @@ class Tree:
                 if isinstance(level, Hierarchy.Member):
                     attribute = member_attributes[level]
 
-                    if format and format[rank]:
-                        self.destinations[i] /= format[rank](attribute)
+                    if formatting and formatting[rank] is not None:
+                        self.destinations[i] /= formatting[rank](attribute)
                     else:
                         self.destinations[i] /= default_format(
                             level, attribute)
@@ -60,15 +59,17 @@ class Tree:
                     attributes = tuple(
                         member_attributes[peer] for peer in level)
 
-                    if format and format[rank]:
-                        self.destinations[i] /= format[rank](attributes)
+                    if formatting and formatting[rank] is not None:
+                        self.destinations[i] /= formatting[rank](*attributes)
                     else:
                         self.destinations[i] /= default_format(
                             level, attributes)
 
             self.destinations[i] /= destination.name
 
-    def flatten(self, show_progress) -> None:
+        return self
+
+    def flatten(self, show_progress) -> "Tree":
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Flatten")
@@ -76,7 +77,9 @@ class Tree:
         for i, destination in enumerate(destinations):
             self.destinations[i] = self.root / destination.name
 
-    def rename(self, rename_func=default_rename, show_progress=False) -> None:
+        return self
+
+    def rename(self, rename_func=default_rename, show_progress=False) -> "Tree":
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Rename")
@@ -97,7 +100,9 @@ class Tree:
 
             self.destinations[i] = destination.parent / new_name
 
-    def resolve(self, show_progress=False) -> None:
+        return self
+
+    def resolve(self, show_progress=False) -> "Tree":
         sources = self.sources
         if show_progress:
             sources = tqdm(self.sources, desc="Resolve")
@@ -126,3 +131,5 @@ class Tree:
             if d.is_dir() and len([f for f in d.rglob("*") if not f.is_dir()]) == 0:
                 if d.exists():
                     shutil.rmtree(d)
+
+        return self
