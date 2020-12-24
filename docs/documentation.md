@@ -1,35 +1,15 @@
 <a name="treefrog"></a>
-# MODULE\_NAME
+# treefrog
 
-A one line summary of the module or program, terminated by a period.
+<a name="treefrog.tree"></a>
+# treefrog.tree
 
-Leave one blank line.  The rest of this docstring should contain an
-overall description of the module or program.  Optionally, it may also
-contain a brief description of exported classes and functions and/or usage
-examples.
+<a name="treefrog.format"></a>
+# treefrog.format
 
-  Typical usage example:
+<a name="treefrog.hierarchy"></a>
+# treefrog.hierarchy
 
-```python
-  foo = ClassFoo()
-  bar = foo.FunctionBar()
-```
-
-<a name="treefrog.repeat_string"></a>
-#### repeat\_string
-
-```python
-repeat_string(s: str, n: int) -> str
-```
-
-Repeat a string an integer number of times!
-
-<a name="treefrog.test"></a>
-# MODULE\_NAME.test
-
-<a name="treefrog.test.test_foo"></a>
-# MODULE\_NAME.test.test\_foo
-
-<a name="treefrog.test.test_bar"></a>
-# MODULE\_NAME.test.test\_bar
+<a name="treefrog.__main__"></a>
+# treefrog.\_\_main\_\_
 
