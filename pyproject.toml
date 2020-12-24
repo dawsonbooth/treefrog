@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "treefrog"
 version = "0.0.1"
-description = ""
+description = "Organize the Slippi game files in your filesystem according to their attributes"
 authors = ["Dawson Booth <pypi@dawsonbooth.com>"]
 license = "MIT"
 readme = "README.md"
@@ -20,6 +20,9 @@ include = [
 packages = [
     { include = "treefrog" },
 ]
+
+[tool.poetry.scripts]
+treefrog = 'treefrog.__main__:main'
 
 [tool.poetry.dependencies]
 python = "^3.6"

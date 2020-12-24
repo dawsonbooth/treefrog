@@ -1,9 +1,11 @@
 import argparse
 from pathlib import Path
+from sys import exit
 
 from . import Tree
 
-if __name__ == "__main__":
+
+def main() -> int:
     parser = argparse.ArgumentParser(
         description='Organize the Slippi game files in your filesystem according to their attributes'
     )
@@ -33,3 +35,9 @@ if __name__ == "__main__":
         tree.rename(show_progress=args.show_progress)
 
     tree.resolve(show_progress=args.show_progress)
+
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())
