@@ -129,7 +129,7 @@ Tree("slp/", "DTB#566").rename().resolve()
 
 This is also command-line program, and can be executed as follows:
 
-```bash
+```txt
 python -m treefrog [-h] -c NETPLAY_CODE [-o | -f] [-r] [-p] ROOT_FOLDER
 ```
 
