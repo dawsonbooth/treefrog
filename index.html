@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="None">
+  
+  <link rel="canonical" href="https://dawsonbooth.github.io/treefrog/">
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>treefrog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Overview";
+    var mkdocs_page_input_path = "README.md";
+    var mkdocs_page_url = "/treefrog/";
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> treefrog</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">Overview</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#module">Module</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#organize">Organize</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#flatten">Flatten</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#rename">Rename</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#command-line">Command-Line</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#license">License</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="documentation/">Documentation</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">treefrog</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Overview</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/dawsonbooth/treefrog/edit/master/docs/README.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="treefrog"><code>treefrog</code><a class="headerlink" href="#treefrog" title="Permanent link">🔗</a></h1>
+<p><a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/v/treefrog.svg?style=flat" /></a>
+<a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/dw/treefrog.svg?style=flat" /></a>
+<a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/pyversions/treefrog.svg?style=flat" /></a>
+<a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/format/treefrog.svg?style=flat" /></a>
+<a href="https://github.com/dawsonbooth/treefrog/blob/master/LICENSE"><img alt="" src="https://img.shields.io/pypi/l/treefrog.svg?style=flat" /></a></p>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">🔗</a></h2>
+<p>Organize the Slippi game files in your filesystem according to their attributes.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">🔗</a></h2>
+<p>With <a href="https://www.python.org/downloads/">Python</a> installed, simply run the following command to add the package to your project.</p>
+<pre><code class="language-bash">pip install treefrog
+</code></pre>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">🔗</a></h2>
+<h3 id="module">Module<a class="headerlink" href="#module" title="Permanent link">🔗</a></h3>
+<p>Currently, the package supports organizing the files according to a supplied hierarchy, flattening the files against the supplied root folder, and renaming all the files according to their attributes. Each of these methods takes in an optional <code>show_progress</code> boolean parameter which, when true, invokes the presentation of a progress bar indicating the processing of all the game files according to the method.</p>
+<h4 id="organize">Organize<a class="headerlink" href="#organize" title="Permanent link">🔗</a></h4>
+<p>The <code>organize</code> method serves the purpose of moving each game file found (deeply or otherwise) under the root folder to its proper location according to the supplied ordering. If no ordering is given, then treefrog will use the default ordering found in the <code>treefrog.hierarchy</code> module. Here is a simple example of calling this method:</p>
+<pre><code class="language-python">from treefrog import Hierarchy, Tree
+
+tree = Tree(&quot;slp/&quot;, &quot;DTB#566&quot;) # Root folder and user's netplay code
+
+ordering = (
+    (
+        Hierarchy.Member.YEAR,
+        Hierarchy.Member.MONTH
+    ),
+    Hierarchy.Member.OPPONENT_CODE,
+    (
+        Hierarchy.Member.CHARACTER,
+        Hierarchy.Member.OPPONENT_CHARACTER
+    ),
+    Hierarchy.Member.STAGE,
+) # An iterable of the desired levels of the hierarchy
+
+tree.organize(ordering) # Organize the files into subfolders according to the supplied attributes
+
+tree.resolve() # Physically adjust the filesystem to reflect the above change
+</code></pre>
+<p>Notice that multiple members may exist on a single level of the hierarchy. The package has some intelligence in place for naming the folders at one of these levels according to the combination of members that are provided. For example, if a level only consists of the <code>CHARACTER</code> and <code>OPPONENT_CHARACTER</code> members, the folders at that level will be named according to the convention: <code>CHARACTER vs OPPONENT_CHARACTER</code>.</p>
+<p>Feel free to provide your own logic for formatting the names of the folders at a particular level with a corresponding iterable of functions:</p>
+<pre><code class="language-python">from treefrog import Hierarchy, Tree
+from treefrog.format import default_format
+
+tree = Tree(&quot;slp/&quot;, &quot;DTB#566&quot;)
+
+ordering = (
+    (
+        Hierarchy.Member.YEAR,
+        Hierarchy.Member.MONTH
+    ),
+    Hierarchy.Member.OPPONENT_CODE,
+    (
+        Hierarchy.Member.CHARACTER,
+        Hierarchy.Member.OPPONENT_CHARACTER
+    ),
+    Hierarchy.Member.STAGE,
+)
+
+formatting = (
+    lambda year, month: f&quot;{default_format(Hierarchy.Member.MONTH, month)} {year}&quot;,
+    None,
+    lambda *chars: &quot; VS &quot;.join(default_format(Hierarchy.Member.CHARACTER, c) for c in chars),
+    None
+)
+
+tree.organize(ordering).resolve()
+</code></pre>
+<p>If <code>None</code> formatting is supplied for a level, then treefrog will resort to the <code>default_format</code> function. You can also use this function for a single member as shown in the example at the topmost level.</p>
+<p>Further, notice that you can use cascading methods to simplify your programming. Each of the methods <code>organize</code>, <code>flatten</code>, and <code>rename</code> will return a reference to the instance object on which it was called. Something like this: <code>tree.organize().rename().resolve()</code> will organize the game files, rename the files, and resolve the physical paths of the files in the order they are called.</p>
+<h4 id="flatten">Flatten<a class="headerlink" href="#flatten" title="Permanent link">🔗</a></h4>
+<p>The <code>flatten</code> method serves the simple purpose of moving each game file found (deeply or otherwise) under the root folder back to the root folder itself. Here's an example of what calling this method may look like:</p>
+<pre><code class="language-python">from treefrog import Tree
+
+tree = Tree(&quot;slp/&quot;, &quot;DTB#566&quot;)
+tree.flatten().resolve()
+</code></pre>
+<h4 id="rename">Rename<a class="headerlink" href="#rename" title="Permanent link">🔗</a></h4>
+<p>The <code>rename</code> method simply renames each game file according to its attributes. Without a rename function supplied, treefrog will use the <code>default_rename</code> function found in the <code>treefrog.format</code> module. Alternatively, you may provide your own rename function as shown below:</p>
+<pre><code class="language-python">from treefrog import Hierarchy, Tree
+from treefrog.format import character_name
+
+def rename(original, members) -&gt; str:
+    code = members[Hierarchy.Member.CODE]
+    name = members[Hierarchy.Member.NAME]
+    character = character_name(members[Hierarchy.Member.CHARACTER])
+    opponent_code = members[Hierarchy.Member.OPPONENT_CODE]
+    opponent_name = members[Hierarchy.Member.OPPONENT_NAME]
+    opponent_character = character_name(members[Hierarchy.Member.OPPONENT_CHARACTER])
+
+    stem = &quot; vs &quot;.join((
+        f&quot;[{code}] {name} ({character})&quot;,
+        f&quot;[{opponent_code}] {opponent_name} ({opponent_character})&quot;
+    ))
+
+    return f&quot;{stem}.{original.split('.')[-1]}&quot;
+
+Tree(&quot;slp/&quot;, &quot;DTB#566&quot;).rename().resolve()
+</code></pre>
+<h3 id="command-line">Command-Line<a class="headerlink" href="#command-line" title="Permanent link">🔗</a></h3>
+<p>This is also command-line program, and can be executed as follows:</p>
+<pre><code class="language-bash">python -m treefrog [-h] -c NETPLAY_CODE [-o | -f] [-r] [-p] ROOT_FOLDER
+</code></pre>
+<p>Positional arguments:</p>
+<pre><code class="language-txt">  ROOT_FOLDER           Slippi folder root path
+</code></pre>
+<p>Optional arguments:</p>
+<pre><code class="language-txt">  -h, --help            show this help message and exit
+  -c NETPLAY_CODE, --netplay-code NETPLAY_CODE
+                        Netplay code (e.g. DTB#566)
+  -o, --organize        Whether to organize the folder hierarchy
+  -f, --flatten         Whether to flatten the folder hierarchy
+  -r, --rename          Whether to rename the files according to the game attributes
+  -p, --show-progress   Whether to show a progress bar
+</code></pre>
+<p>For example, the following command will organize all the game files under the <code>slp</code> directory.</p>
+<pre><code class="language-bash">python -m treefrog &quot;slp&quot; -c &quot;DTB#566&quot; -op
+</code></pre>
+<p>Feel free to <a href="https://dawsonbooth.com/treefrog/">check out the docs</a> for more information.</p>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">🔗</a></h2>
+<p>This software is released under the terms of <a href="LICENSE">MIT license</a>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="documentation/" class="btn btn-neutral float-right" title="Documentation">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/dawsonbooth/treefrog/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+        <span style="margin-left: 15px"><a href="documentation/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.1.2
+Build Date UTC : 2020-12-24 01:18:20.272566+00:00
+-->
