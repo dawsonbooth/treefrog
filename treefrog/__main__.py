@@ -1,6 +1,6 @@
 import argparse
+import sys
 from pathlib import Path
-from sys import exit
 
 from . import Tree
 
@@ -40,4 +40,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())
