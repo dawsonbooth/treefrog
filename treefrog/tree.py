@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import os
 import re
 import shutil
 from pathlib import Path
-from typing import Callable, Iterable, List
+from typing import Callable, Iterable, List, Optional, Sequence
 
 from slippi.parse import ParseError
 from tqdm import tqdm
@@ -26,9 +28,9 @@ class Tree:
     def organize(
         self,
         ordering: Hierarchy.Ordering = default_ordering,
-        formatting: Iterable[Callable] = None,
+        formatting: Optional[Sequence[Callable]] = None,
         show_progress: bool = False
-    ) -> "Tree":
+    ) -> Tree:
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Organize")
@@ -69,7 +71,7 @@ class Tree:
 
         return self
 
-    def flatten(self, show_progress) -> "Tree":
+    def flatten(self, show_progress) -> Tree:
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Flatten")
@@ -79,7 +81,7 @@ class Tree:
 
         return self
 
-    def rename(self, rename_func=default_rename, show_progress=False) -> "Tree":
+    def rename(self, rename_func=default_rename, show_progress=False) -> Tree:
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Rename")
@@ -102,7 +104,7 @@ class Tree:
 
         return self
 
-    def resolve(self, show_progress=False) -> "Tree":
+    def resolve(self, show_progress=False) -> Tree:
         sources = self.sources
         if show_progress:
             sources = tqdm(self.sources, desc="Resolve")
@@ -125,7 +127,7 @@ class Tree:
                     break
 
             os.makedirs(destination.parent, exist_ok=True)
-            shutil.move(source, self.destinations[i])
+            shutil.move(str(source), str(self.destinations[i]))
 
         for d in self.root.rglob("*"):
             if d.is_dir() and len([f for f in d.rglob("*") if not f.is_dir()]) == 0:

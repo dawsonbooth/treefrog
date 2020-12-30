@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from typing import Any, Dict, Iterable, Union
+from typing import Any, Dict, Sequence, Union
 
 from slippi.event import Start
 from slippi.metadata import Metadata
@@ -22,8 +22,8 @@ class Hierarchy():
         MINUTE = auto()
         SECOND = auto()
 
-    Level = Union[Member, Iterable[Member]]
-    Ordering = Iterable[Level]
+    Level = Union[Member, Sequence[Member]]
+    Ordering = Sequence[Level]
 
 
 def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, Any]:

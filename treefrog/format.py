@@ -1,6 +1,6 @@
 import calendar
 from pathlib import Path
-from typing import Any, Dict, Iterable, Union
+from typing import Any, Dict, Optional, Sequence, Union
 
 from slippi.id import InGameCharacter, Stage
 
@@ -25,8 +25,8 @@ def stage_name(stage: Stage) -> str:
     return stage.name.replace("_", " ").title()
 
 
-def format_datetime(year: int = None, month: int = None, day: int = None,
-                    hour: int = None, minute: int = None, second: int = None):
+def format_datetime(year: Optional[int] = None, month: Optional[int] = None, day: Optional[int] = None,
+                    hour: Optional[int] = None, minute: Optional[int] = None, second: Optional[int] = None):
     date = "-".join(str(d) for d in (month, day, year) if d is not None)
     if year is not None and month is not None:
         date = f"{year} {calendar.month_name[month]}"
@@ -36,10 +36,10 @@ def format_datetime(year: int = None, month: int = None, day: int = None,
     return f"{date} {time}".strip()
 
 
-def default_format(level: Hierarchy.Level, attributes: Union[Any, Iterable[Any]]) -> str:
+def default_format(level: Hierarchy.Level, attributes: Union[Any, Sequence[Any]]) -> str:
     if isinstance(level, Hierarchy.Member):
         member = level
-        attribute = attributes
+        attribute: Any = attributes
 
         if member in (Hierarchy.Member.CHARACTER, Hierarchy.Member.OPPONENT_CHARACTER):
             return character_name(attribute)
@@ -49,7 +49,7 @@ def default_format(level: Hierarchy.Level, attributes: Union[Any, Iterable[Any]]
             return calendar.month_name[attribute]
         return str(attribute)
 
-    elif isinstance(level, Iterable):
+    elif isinstance(level, Sequence) and isinstance(attributes, Sequence):
         members = sorted(level, key=lambda member: member.value)
         if len(members) == 2:
             if (
@@ -83,6 +83,7 @@ def default_format(level: Hierarchy.Level, attributes: Union[Any, Iterable[Any]]
             return format_datetime(**dt)
 
         return " ".join((default_format(members[i], attributes[i]) for i in range(len(members))))
+    return str(attributes)
 
 
 def default_rename(original, members: Dict[Hierarchy.Member, Any]) -> str:
