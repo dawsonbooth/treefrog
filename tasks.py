@@ -22,6 +22,11 @@ def lint(c):
 
 
 @task
+def type_check(c):
+    c.run("mypy -m treefrog --ignore-missing-imports")
+
+
+@task
 def test(c):
     c.run("pytest treefrog/test")
 
