@@ -4,7 +4,7 @@ import os
 import re
 import shutil
 from pathlib import Path
-from typing import Callable, Iterable, List, Optional, Sequence
+from typing import Callable, List, Optional, Sequence
 
 from slippi.parse import ParseError
 from tqdm import tqdm
@@ -28,7 +28,7 @@ class Tree:
     def organize(
         self,
         ordering: Hierarchy.Ordering = default_ordering,
-        formatting: Optional[Sequence[Callable]] = None,
+        formatting: Optional[Sequence[Callable[..., str]]] = None,
         show_progress: bool = False
     ) -> Tree:
         destinations = self.destinations
@@ -39,7 +39,7 @@ class Tree:
             source = self.sources[i]
 
             try:
-                member_attributes = get_attributes(
+                game_attributes = get_attributes(
                     str(source), self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
@@ -49,23 +49,15 @@ class Tree:
             self.destinations[i] = self.root
 
             for rank, level in enumerate(ordering):
-                if isinstance(level, Hierarchy.Member):
-                    attribute = member_attributes[level]
+                format_func = default_format
+                if formatting and formatting[rank]:
+                    format_func = formatting[rank]
 
-                    if formatting and formatting[rank] is not None:
-                        self.destinations[i] /= formatting[rank](attribute)
-                    else:
-                        self.destinations[i] /= default_format(
-                            level, attribute)
-                elif isinstance(level, Iterable):
-                    attributes = tuple(
-                        member_attributes[peer] for peer in level)
+                level_attributes = dict(
+                    (str(peer), game_attributes[peer]) for peer in level
+                )
 
-                    if formatting and formatting[rank] is not None:
-                        self.destinations[i] /= formatting[rank](*attributes)
-                    else:
-                        self.destinations[i] /= default_format(
-                            level, attributes)
+                self.destinations[i] /= format_func(**level_attributes)
 
             self.destinations[i] /= destination.name
 
@@ -90,14 +82,14 @@ class Tree:
             source = self.sources[i]
 
             try:
-                member_attributes = get_attributes(
+                game_attributes = get_attributes(
                     str(source), self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
                     "Error" / destination.name
                 continue
 
-            new_name = rename_func(destination.name, member_attributes)
+            new_name = rename_func(**game_attributes)
             new_name = re.sub(r'[\\/:"*?<>|]+', "", new_name)
 
             self.destinations[i] = destination.parent / new_name

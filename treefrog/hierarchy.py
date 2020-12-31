@@ -1,5 +1,5 @@
-from enum import Enum, auto
-from typing import Any, Dict, Sequence, Union
+from enum import Enum
+from typing import Any, Dict, Iterable, Sequence
 
 from slippi.event import Start
 from slippi.metadata import Metadata
@@ -7,32 +7,32 @@ from slippi.parse import ParseEvent, parse
 
 
 class Hierarchy():
-    class Member(Enum):
-        NAME = auto()
-        CODE = auto()
-        CHARACTER = auto()
-        OPPONENT_NAME = auto()
-        OPPONENT_CODE = auto()
-        OPPONENT_CHARACTER = auto()
-        STAGE = auto()
-        YEAR = auto()
-        MONTH = auto()
-        DAY = auto()
-        HOUR = auto()
-        MINUTE = auto()
-        SECOND = auto()
+    class Member(str, Enum):
+        NAME = "name"
+        CODE = "code"
+        CHARACTER = "character"
+        OPPONENT_NAME = "opponent_name"
+        OPPONENT_CODE = "opponent_code"
+        OPPONENT_CHARACTER = "opponent_character"
+        STAGE = "stage"
+        YEAR = "year"
+        MONTH = "month"
+        DAY = "day"
+        HOUR = "hour"
+        MINUTE = "minute"
+        SECOND = "second"
 
-    Level = Union[Member, Sequence[Member]]
+    Level = Iterable[Member]
     Ordering = Sequence[Level]
 
 
 def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, Any]:
-    members: Dict[Hierarchy.Member, Any] = {
+    game_attributes: Dict[Hierarchy.Member, Any] = {
         Hierarchy.Member.CODE: netplay_code
     }
 
     def parse_start(start: Start):
-        members[Hierarchy.Member.STAGE] = start.stage
+        game_attributes[Hierarchy.Member.STAGE] = start.stage
 
     def parse_metadata(metadata: Metadata):
         for player in metadata.players:
@@ -44,18 +44,18 @@ def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, 
                     key=lambda c: player.characters[c]
                 )[0]
                 if code == netplay_code:
-                    members[Hierarchy.Member.NAME] = name
-                    members[Hierarchy.Member.CHARACTER] = character
+                    game_attributes[Hierarchy.Member.NAME] = name
+                    game_attributes[Hierarchy.Member.CHARACTER] = character
                 else:
-                    members[Hierarchy.Member.OPPONENT_CODE] = code
-                    members[Hierarchy.Member.OPPONENT_NAME] = name
-                    members[Hierarchy.Member.OPPONENT_CHARACTER] = character
-        members[Hierarchy.Member.YEAR] = metadata.date.year
-        members[Hierarchy.Member.MONTH] = metadata.date.month
-        members[Hierarchy.Member.DAY] = metadata.date.day
-        members[Hierarchy.Member.HOUR] = metadata.date.hour
-        members[Hierarchy.Member.MINUTE] = metadata.date.minute
-        members[Hierarchy.Member.SECOND] = metadata.date.second
+                    game_attributes[Hierarchy.Member.OPPONENT_CODE] = code
+                    game_attributes[Hierarchy.Member.OPPONENT_NAME] = name
+                    game_attributes[Hierarchy.Member.OPPONENT_CHARACTER] = character
+        game_attributes[Hierarchy.Member.YEAR] = metadata.date.year
+        game_attributes[Hierarchy.Member.MONTH] = metadata.date.month
+        game_attributes[Hierarchy.Member.DAY] = metadata.date.day
+        game_attributes[Hierarchy.Member.HOUR] = metadata.date.hour
+        game_attributes[Hierarchy.Member.MINUTE] = metadata.date.minute
+        game_attributes[Hierarchy.Member.SECOND] = metadata.date.second
 
     handlers = {
         ParseEvent.START: parse_start,
@@ -64,18 +64,22 @@ def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, 
 
     parse(game_path, handlers)
 
-    return members
+    return game_attributes
 
 
-default_ordering = (
-    (
+default_ordering: Hierarchy.Ordering = (
+    {
         Hierarchy.Member.YEAR,
         Hierarchy.Member.MONTH
-    ),
-    Hierarchy.Member.OPPONENT_CODE,
-    (
+    },
+    {
+        Hierarchy.Member.OPPONENT_CODE
+    },
+    {
         Hierarchy.Member.CHARACTER,
         Hierarchy.Member.OPPONENT_CHARACTER
-    ),
-    Hierarchy.Member.STAGE,
+    },
+    {
+        Hierarchy.Member.STAGE
+    },
 )

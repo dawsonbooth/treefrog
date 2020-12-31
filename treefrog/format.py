@@ -1,6 +1,5 @@
 import calendar
-from pathlib import Path
-from typing import Any, Dict, Optional, Sequence, Union
+from typing import Optional
 
 from slippi.id import InGameCharacter, Stage
 
@@ -36,10 +35,11 @@ def format_datetime(year: Optional[int] = None, month: Optional[int] = None, day
     return f"{date} {time}".strip()
 
 
-def default_format(level: Hierarchy.Level, attributes: Union[Any, Sequence[Any]]) -> str:
-    if isinstance(level, Hierarchy.Member):
-        member = level
-        attribute: Any = attributes
+def default_format(**kwargs) -> str:
+    members, attributes = tuple(kwargs.keys()), tuple(kwargs.values())
+    if len(members) == 1:
+        member = members[0]
+        attribute = attributes[0]
 
         if member in (Hierarchy.Member.CHARACTER, Hierarchy.Member.OPPONENT_CHARACTER):
             return character_name(attribute)
@@ -49,47 +49,27 @@ def default_format(level: Hierarchy.Level, attributes: Union[Any, Sequence[Any]]
             return calendar.month_name[attribute]
         return str(attribute)
 
-    elif isinstance(level, Sequence) and isinstance(attributes, Sequence):
-        members = sorted(level, key=lambda member: member.value)
-        if len(members) == 2:
-            if (
-                (Hierarchy.Member.NAME in members and Hierarchy.Member.OPPONENT_NAME in members) or
-                (Hierarchy.Member.CHARACTER in members and Hierarchy.Member.OPPONENT_CHARACTER) or
-                (Hierarchy.Member.CODE in members and Hierarchy.Member.OPPONENT_CODE in members)
-            ):
-                return f"{default_format(members[0], attributes[0])} vs {default_format(members[1], attributes[1])}"
+    if len(members) == 2 and set(members) in (
+        {Hierarchy.Member.NAME, Hierarchy.Member.OPPONENT_NAME},
+        {Hierarchy.Member.CHARACTER, Hierarchy.Member.OPPONENT_CHARACTER},
+        {Hierarchy.Member.CODE, Hierarchy.Member.OPPONENT_CODE}
+    ):
+        return " vs ".join((default_format(**{member: attribute}) for member, attribute in kwargs.items()))
 
-        if all(
-            m in (Hierarchy.Member.YEAR, Hierarchy.Member.MONTH, Hierarchy.Member.DAY,
-                  Hierarchy.Member.HOUR, Hierarchy.Member.MINUTE, Hierarchy.Member.SECOND)
-            for m in members
-        ):
-            dt = dict()
-            for i, member in enumerate(members):
-                attribute = attributes[i]
-                if member == Hierarchy.Member.YEAR:
-                    dt["year"] = attribute
-                elif member == Hierarchy.Member.MONTH:
-                    dt["month"] = attribute
-                elif member == Hierarchy.Member.DAY:
-                    dt["day"] = attribute
-                elif member == Hierarchy.Member.HOUR:
-                    dt["hour"] = attribute
-                elif member == Hierarchy.Member.MINUTE:
-                    dt["minute"] = attribute
-                elif member == Hierarchy.Member.SECOND:
-                    dt["second"] = attribute
+    if all(m in {
+        Hierarchy.Member.YEAR, Hierarchy.Member.MONTH, Hierarchy.Member.DAY,
+        Hierarchy.Member.HOUR, Hierarchy.Member.MINUTE, Hierarchy.Member.SECOND
+    } for m in members):
+        return format_datetime(**kwargs)
 
-            return format_datetime(**dt)
-
-        return " ".join((default_format(members[i], attributes[i]) for i in range(len(members))))
-    return str(attributes)
+    return " ".join((default_format(**{member: attribute}) for member, attribute in kwargs.items()))
 
 
-def default_rename(original, members: Dict[Hierarchy.Member, Any]) -> str:
-    name, code, character, opponent_name, opponent_code, opponent_character, stage, year, month, day, hour, minute, second = (
-        members[k] for k in sorted(members.keys(), key=lambda k: k.value)
-    )
+def default_rename(
+    name: str, code: str, character: InGameCharacter,
+    opponent_name: str, opponent_code: str, opponent_character: InGameCharacter,
+    stage: Stage, year: int, month: int, day: int, hour: int, minute: int, second: int
+) -> str:
     timestamp = f"{year}{month:02}{day:02}T{hour:02}{minute:02}{second:02}"
 
     players = " vs ".join((
@@ -97,6 +77,4 @@ def default_rename(original, members: Dict[Hierarchy.Member, Any]) -> str:
         f"[{opponent_code}] {opponent_name} ({character_name(opponent_character)})"
     ))
 
-    stem = " - ".join((timestamp, players, stage_name(stage)))
-
-    return stem + Path(original).suffix
+    return " - ".join((timestamp, players, stage_name(stage))) + ".slp"
