@@ -34,16 +34,20 @@ from treefrog import Hierarchy, Tree
 tree = Tree("slp/", "DTB#566") # Root folder and user's netplay code
 
 ordering = (
-    (
+    {
         Hierarchy.Member.YEAR,
         Hierarchy.Member.MONTH
-    ),
-    Hierarchy.Member.OPPONENT_CODE,
-    (
+    },
+    {
+        Hierarchy.Member.OPPONENT_CODE
+    },
+    {
         Hierarchy.Member.CHARACTER,
         Hierarchy.Member.OPPONENT_CHARACTER
-    ),
-    Hierarchy.Member.STAGE,
+    },
+    {
+        Hierarchy.Member.STAGE
+    },
 ) # An iterable of the desired levels of the hierarchy
 
 tree.organize(ordering) # Organize the files into subfolders according to the supplied attributes
@@ -51,40 +55,44 @@ tree.organize(ordering) # Organize the files into subfolders according to the su
 tree.resolve() # Physically adjust the filesystem to reflect the above change
 ```
 
-Notice that multiple members may exist on a single level of the hierarchy. The package has some intelligence in place for naming the folders at one of these levels according to the combination of members that are provided. For example, if a level only consists of the `CHARACTER` and `OPPONENT_CHARACTER` members, the folders at that level will be named according to the convention: `CHARACTER vs OPPONENT_CHARACTER`.
+This package has some intelligence in place for naming the folders at one of these levels according to the combination of members that are provided. For example, if a level only consists of the `CHARACTER` and `OPPONENT_CHARACTER` members, the folders at that level will be named according to the convention: `CHARACTER vs OPPONENT_CHARACTER`.
 
 Feel free to provide your own logic for formatting the names of the folders at a particular level with a corresponding iterable of functions:
 
 ```python
 from treefrog import Hierarchy, Tree
-from treefrog.format import default_format
+from treefrog.format import default_format, character_name
 
 tree = Tree("slp/", "DTB#566")
 
 ordering = (
-    (
+    {
         Hierarchy.Member.YEAR,
         Hierarchy.Member.MONTH
-    ),
-    Hierarchy.Member.OPPONENT_CODE,
-    (
+    },
+    {
+        Hierarchy.Member.OPPONENT_CODE
+    },
+    {
         Hierarchy.Member.CHARACTER,
         Hierarchy.Member.OPPONENT_CHARACTER
-    ),
-    Hierarchy.Member.STAGE,
+    },
+    {
+        Hierarchy.Member.STAGE
+    },
 )
 
 formatting = (
-    lambda year, month: f"{default_format(Hierarchy.Member.MONTH, month)} {year}",
+    lambda year, month: f"{default_format(**{Hierarchy.Member.MONTH: month})} {year}",
     None,
-    lambda *chars: " VS ".join(default_format(Hierarchy.Member.CHARACTER, c) for c in chars),
+    lambda character, opponent_character: f"{character_name(character)} VS {character_name(opponent_character)}",
     None
 )
 
 tree.organize(ordering).resolve()
 ```
 
-If `None` formatting is supplied for a level, then treefrog will resort to the `default_format` function. You can also use this function for a single member as shown in the example at the topmost level.
+The game attributes corresponding to the ordering will be passed as keyword arguments into the function you provide, so be sure to use correct argument names. If `None` formatting is supplied for a level, then treefrog will resort to the `default_format` function.
 
 Further, notice that you can use cascading methods to simplify your programming. Each of the methods `organize`, `flatten`, and `rename` will return a reference to the instance object on which it was called. Something like this: `tree.organize().rename().resolve()` will organize the game files, rename the files, and resolve the physical paths of the files in the order they are called.
 
@@ -107,29 +115,22 @@ The `rename` method simply renames each game file according to its attributes. W
 from treefrog import Hierarchy, Tree
 from treefrog.format import character_name
 
-def rename(original, members) -> str:
-    code = members[Hierarchy.Member.CODE]
-    name = members[Hierarchy.Member.NAME]
-    character = character_name(members[Hierarchy.Member.CHARACTER])
-    opponent_code = members[Hierarchy.Member.OPPONENT_CODE]
-    opponent_name = members[Hierarchy.Member.OPPONENT_NAME]
-    opponent_character = character_name(members[Hierarchy.Member.OPPONENT_CHARACTER])
+def rename(code, name, character, opponent_code, opponent_name, opponent_character, **kwargs):
+    return " vs ".join((
+        f"[{code}] {name} ({character_name(character)})",
+        f"[{opponent_code}] {opponent_name} ({character_name(opponent_character)})"
+    )) + ".slp"
 
-    stem = " vs ".join((
-        f"[{code}] {name} ({character})",
-        f"[{opponent_code}] {opponent_name} ({opponent_character})"
-    ))
-
-    return f"{stem}.{original.split('.')[-1]}"
-
-Tree("slp/", "DTB#566").rename().resolve()
+Tree("slp/", "DTB#566").rename(rename_func=rename).resolve()
 ```
+
+All game attributes will be passed as keyword arguments into the function you provide, so be sure to catch the ones you don't use with `**kwargs` or you'll get an error!
 
 ### Command-Line
 
 This is also command-line program, and can be executed as follows:
 
-```bash
+```txt
 python -m treefrog [-h] -c NETPLAY_CODE [-o | -f] [-r] [-p] ROOT_FOLDER
 ```
 

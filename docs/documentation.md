@@ -4,6 +4,9 @@
 <a name="treefrog.tree"></a>
 # treefrog.tree
 
+<a name="treefrog.rename"></a>
+# treefrog.rename
+
 <a name="treefrog.format"></a>
 # treefrog.format
 
