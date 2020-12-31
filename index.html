@@ -136,52 +136,60 @@
 tree = Tree(&quot;slp/&quot;, &quot;DTB#566&quot;) # Root folder and user's netplay code
 
 ordering = (
-    (
+    {
         Hierarchy.Member.YEAR,
         Hierarchy.Member.MONTH
-    ),
-    Hierarchy.Member.OPPONENT_CODE,
-    (
+    },
+    {
+        Hierarchy.Member.OPPONENT_CODE
+    },
+    {
         Hierarchy.Member.CHARACTER,
         Hierarchy.Member.OPPONENT_CHARACTER
-    ),
-    Hierarchy.Member.STAGE,
+    },
+    {
+        Hierarchy.Member.STAGE
+    },
 ) # An iterable of the desired levels of the hierarchy
 
 tree.organize(ordering) # Organize the files into subfolders according to the supplied attributes
 
 tree.resolve() # Physically adjust the filesystem to reflect the above change
 </code></pre>
-<p>Notice that multiple members may exist on a single level of the hierarchy. The package has some intelligence in place for naming the folders at one of these levels according to the combination of members that are provided. For example, if a level only consists of the <code>CHARACTER</code> and <code>OPPONENT_CHARACTER</code> members, the folders at that level will be named according to the convention: <code>CHARACTER vs OPPONENT_CHARACTER</code>.</p>
+<p>This package has some intelligence in place for naming the folders at one of these levels according to the combination of members that are provided. For example, if a level only consists of the <code>CHARACTER</code> and <code>OPPONENT_CHARACTER</code> members, the folders at that level will be named according to the convention: <code>CHARACTER vs OPPONENT_CHARACTER</code>.</p>
 <p>Feel free to provide your own logic for formatting the names of the folders at a particular level with a corresponding iterable of functions:</p>
 <pre><code class="language-python">from treefrog import Hierarchy, Tree
-from treefrog.format import default_format
+from treefrog.format import default_format, character_name
 
 tree = Tree(&quot;slp/&quot;, &quot;DTB#566&quot;)
 
 ordering = (
-    (
+    {
         Hierarchy.Member.YEAR,
         Hierarchy.Member.MONTH
-    ),
-    Hierarchy.Member.OPPONENT_CODE,
-    (
+    },
+    {
+        Hierarchy.Member.OPPONENT_CODE
+    },
+    {
         Hierarchy.Member.CHARACTER,
         Hierarchy.Member.OPPONENT_CHARACTER
-    ),
-    Hierarchy.Member.STAGE,
+    },
+    {
+        Hierarchy.Member.STAGE
+    },
 )
 
 formatting = (
-    lambda year, month: f&quot;{default_format(Hierarchy.Member.MONTH, month)} {year}&quot;,
+    lambda year, month: f&quot;{default_format(**{Hierarchy.Member.MONTH: month})} {year}&quot;,
     None,
-    lambda *chars: &quot; VS &quot;.join(default_format(Hierarchy.Member.CHARACTER, c) for c in chars),
+    lambda character, opponent_character: f&quot;{character_name(character)} VS {character_name(opponent_character)}&quot;,
     None
 )
 
 tree.organize(ordering).resolve()
 </code></pre>
-<p>If <code>None</code> formatting is supplied for a level, then treefrog will resort to the <code>default_format</code> function. You can also use this function for a single member as shown in the example at the topmost level.</p>
+<p>The game attributes corresponding to the ordering will be passed as keyword arguments into the function you provide, so be sure to use correct argument names. If <code>None</code> formatting is supplied for a level, then treefrog will resort to the <code>default_format</code> function.</p>
 <p>Further, notice that you can use cascading methods to simplify your programming. Each of the methods <code>organize</code>, <code>flatten</code>, and <code>rename</code> will return a reference to the instance object on which it was called. Something like this: <code>tree.organize().rename().resolve()</code> will organize the game files, rename the files, and resolve the physical paths of the files in the order they are called.</p>
 <h4 id="flatten">Flatten<a class="headerlink" href="#flatten" title="Permanent link">🔗</a></h4>
 <p>The <code>flatten</code> method serves the simple purpose of moving each game file found (deeply or otherwise) under the root folder back to the root folder itself. Here's an example of what calling this method may look like:</p>
@@ -195,26 +203,18 @@ tree.flatten().resolve()
 <pre><code class="language-python">from treefrog import Hierarchy, Tree
 from treefrog.format import character_name
 
-def rename(original, members) -&gt; str:
-    code = members[Hierarchy.Member.CODE]
-    name = members[Hierarchy.Member.NAME]
-    character = character_name(members[Hierarchy.Member.CHARACTER])
-    opponent_code = members[Hierarchy.Member.OPPONENT_CODE]
-    opponent_name = members[Hierarchy.Member.OPPONENT_NAME]
-    opponent_character = character_name(members[Hierarchy.Member.OPPONENT_CHARACTER])
+def rename(code, name, character, opponent_code, opponent_name, opponent_character, **kwargs):
+    return &quot; vs &quot;.join((
+        f&quot;[{code}] {name} ({character_name(character)})&quot;,
+        f&quot;[{opponent_code}] {opponent_name} ({character_name(opponent_character)})&quot;
+    )) + &quot;.slp&quot;
 
-    stem = &quot; vs &quot;.join((
-        f&quot;[{code}] {name} ({character})&quot;,
-        f&quot;[{opponent_code}] {opponent_name} ({opponent_character})&quot;
-    ))
-
-    return f&quot;{stem}.{original.split('.')[-1]}&quot;
-
-Tree(&quot;slp/&quot;, &quot;DTB#566&quot;).rename().resolve()
+Tree(&quot;slp/&quot;, &quot;DTB#566&quot;).rename(rename_func=rename).resolve()
 </code></pre>
+<p>All game attributes will be passed as keyword arguments into the function you provide, so be sure to catch the ones you don't use with <code>**kwargs</code> or you'll get an error!</p>
 <h3 id="command-line">Command-Line<a class="headerlink" href="#command-line" title="Permanent link">🔗</a></h3>
 <p>This is also command-line program, and can be executed as follows:</p>
-<pre><code class="language-bash">python -m treefrog [-h] -c NETPLAY_CODE [-o | -f] [-r] [-p] ROOT_FOLDER
+<pre><code class="language-txt">python -m treefrog [-h] -c NETPLAY_CODE [-o | -f] [-r] [-p] ROOT_FOLDER
 </code></pre>
 <p>Positional arguments:</p>
 <pre><code class="language-txt">  ROOT_FOLDER           Slippi folder root path
@@ -289,5 +289,5 @@ Tree(&quot;slp/&quot;, &quot;DTB#566&quot;).rename().resolve()
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2020-12-24 01:18:20.272566+00:00
+Build Date UTC : 2020-12-31 06:47:46.307060+00:00
 -->
