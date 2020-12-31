@@ -26,13 +26,13 @@ class Hierarchy():
     Ordering = Sequence[Level]
 
 
-def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, Any]:
-    game_attributes: Dict[Hierarchy.Member, Any] = {
+def game_characteristics(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, Any]:
+    characteristics: Dict[Hierarchy.Member, Any] = {
         Hierarchy.Member.CODE: netplay_code
     }
 
     def parse_start(start: Start):
-        game_attributes[Hierarchy.Member.STAGE] = start.stage
+        characteristics[Hierarchy.Member.STAGE] = start.stage
 
     def parse_metadata(metadata: Metadata):
         for player in metadata.players:
@@ -44,18 +44,18 @@ def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, 
                     key=lambda c: player.characters[c]
                 )[0]
                 if code == netplay_code:
-                    game_attributes[Hierarchy.Member.NAME] = name
-                    game_attributes[Hierarchy.Member.CHARACTER] = character
+                    characteristics[Hierarchy.Member.NAME] = name
+                    characteristics[Hierarchy.Member.CHARACTER] = character
                 else:
-                    game_attributes[Hierarchy.Member.OPPONENT_CODE] = code
-                    game_attributes[Hierarchy.Member.OPPONENT_NAME] = name
-                    game_attributes[Hierarchy.Member.OPPONENT_CHARACTER] = character
-        game_attributes[Hierarchy.Member.YEAR] = metadata.date.year
-        game_attributes[Hierarchy.Member.MONTH] = metadata.date.month
-        game_attributes[Hierarchy.Member.DAY] = metadata.date.day
-        game_attributes[Hierarchy.Member.HOUR] = metadata.date.hour
-        game_attributes[Hierarchy.Member.MINUTE] = metadata.date.minute
-        game_attributes[Hierarchy.Member.SECOND] = metadata.date.second
+                    characteristics[Hierarchy.Member.OPPONENT_CODE] = code
+                    characteristics[Hierarchy.Member.OPPONENT_NAME] = name
+                    characteristics[Hierarchy.Member.OPPONENT_CHARACTER] = character
+        characteristics[Hierarchy.Member.YEAR] = metadata.date.year
+        characteristics[Hierarchy.Member.MONTH] = metadata.date.month
+        characteristics[Hierarchy.Member.DAY] = metadata.date.day
+        characteristics[Hierarchy.Member.HOUR] = metadata.date.hour
+        characteristics[Hierarchy.Member.MINUTE] = metadata.date.minute
+        characteristics[Hierarchy.Member.SECOND] = metadata.date.second
 
     handlers = {
         ParseEvent.START: parse_start,
@@ -64,7 +64,7 @@ def get_attributes(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, 
 
     parse(game_path, handlers)
 
-    return game_attributes
+    return characteristics
 
 
 default_ordering: Hierarchy.Ordering = (

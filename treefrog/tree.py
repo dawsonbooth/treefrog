@@ -9,7 +9,7 @@ from slippi.parse import ParseError
 from tqdm import tqdm
 
 from .format import default_format
-from .hierarchy import Hierarchy, default_ordering, get_attributes
+from .hierarchy import Hierarchy, default_ordering, game_characteristics
 from .rename import create_filename
 
 
@@ -36,11 +36,9 @@ class Tree:
             destinations = tqdm(self.destinations, desc="Organize")
 
         for i, destination in enumerate(destinations):
-            source = self.sources[i]
-
             try:
-                game_attributes = get_attributes(
-                    str(source), self.netplay_code)
+                characteristics = game_characteristics(
+                    str(self.sources[i]), self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
                     "Error" / destination.name
@@ -53,11 +51,11 @@ class Tree:
                 if formatting and formatting[rank]:
                     format_func = formatting[rank]
 
-                level_attributes = dict(
-                    (str(peer), game_attributes[peer]) for peer in level
+                attributes = dict(
+                    (str(peer), characteristics[peer]) for peer in level
                 )
 
-                self.destinations[i] /= format_func(**level_attributes)
+                self.destinations[i] /= format_func(**attributes)
 
             self.destinations[i] /= destination.name
 
@@ -79,29 +77,25 @@ class Tree:
             destinations = tqdm(self.destinations, desc="Rename")
 
         for i, destination in enumerate(destinations):
-            source = self.sources[i]
-
             try:
-                game_attributes = get_attributes(
-                    str(source), self.netplay_code)
+                characteristics = game_characteristics(
+                    str(self.sources[i]), self.netplay_code)
             except ParseError:
                 self.destinations[i] = self.root / \
                     "Error" / destination.name
                 continue
 
             self.destinations[i] = destination.parent / \
-                create_filename(**game_attributes)
+                create_filename(**characteristics)
 
         return self
 
     def resolve(self, show_progress=False) -> Tree:
-        sources = self.sources
+        destinations = self.destinations
         if show_progress:
-            sources = tqdm(self.sources, desc="Resolve")
+            destinations = tqdm(self.destinations, desc="Resolve")
 
-        for i, source in enumerate(sources):
-            destination = self.destinations[i]
-
+        for i, destination in enumerate(destinations):
             num_duplicates = 0
             new_name = destination.name
             while True:
@@ -117,7 +111,7 @@ class Tree:
                     break
 
             os.makedirs(destination.parent, exist_ok=True)
-            shutil.move(str(source), str(self.destinations[i]))
+            shutil.move(str(self.sources), str(self.destinations[i]))
 
         for path in self.root.rglob("*"):
             if path.is_dir() and len([f for f in path.rglob("*") if not f.is_dir()]) == 0:
