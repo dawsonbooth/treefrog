@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import re
 import shutil
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence
@@ -9,8 +8,9 @@ from typing import Callable, List, Optional, Sequence
 from slippi.parse import ParseError
 from tqdm import tqdm
 
-from .format import default_format, default_rename
+from .format import default_format
 from .hierarchy import Hierarchy, default_ordering, get_attributes
+from .rename import create_filename
 
 
 class Tree:
@@ -73,7 +73,7 @@ class Tree:
 
         return self
 
-    def rename(self, rename_func=default_rename, show_progress=False) -> Tree:
+    def rename(self, create_filename=create_filename, show_progress=False) -> Tree:
         destinations = self.destinations
         if show_progress:
             destinations = tqdm(self.destinations, desc="Rename")
@@ -89,10 +89,8 @@ class Tree:
                     "Error" / destination.name
                 continue
 
-            new_name = rename_func(**game_attributes)
-            new_name = re.sub(r'[\\/:"*?<>|]+', "", new_name)
-
-            self.destinations[i] = destination.parent / new_name
+            self.destinations[i] = destination.parent / \
+                create_filename(**game_attributes)
 
         return self
 
