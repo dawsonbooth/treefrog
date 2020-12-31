@@ -9,9 +9,9 @@ from .hierarchy import Hierarchy
 def character_name(character: InGameCharacter) -> str:
     if character == InGameCharacter.DR_MARIO:
         return "Dr. Mario"
-    elif character == InGameCharacter.GAME_AND_WATCH:
+    if character == InGameCharacter.GAME_AND_WATCH:
         return "Game & Watch"
-    elif character in {InGameCharacter.POPO, InGameCharacter.NANA}:
+    if character in {InGameCharacter.POPO, InGameCharacter.NANA}:
         return "Ice Climbers"
     return character.name.replace("_", " ").title()
 
@@ -19,7 +19,7 @@ def character_name(character: InGameCharacter) -> str:
 def stage_name(stage: Stage) -> str:
     if stage == Stage.FOUNTAIN_OF_DREAMS:
         return "Fountain of Dreams"
-    elif stage == Stage.YOSHIS_STORY:
+    if stage == Stage.YOSHIS_STORY:
         return "Yoshi's Story"
     return stage.name.replace("_", " ").title()
 
@@ -47,9 +47,9 @@ def default_format(**kwargs) -> str:
 
         if member in (Hierarchy.Member.CHARACTER, Hierarchy.Member.OPPONENT_CHARACTER):
             return character_name(attribute)
-        elif member == Hierarchy.Member.STAGE:
+        if member == Hierarchy.Member.STAGE:
             return stage_name(attribute)
-        elif member == Hierarchy.Member.MONTH:
+        if member == Hierarchy.Member.MONTH:
             return calendar.month_name[attribute]
         return str(attribute)
 

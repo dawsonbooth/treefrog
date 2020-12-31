@@ -102,15 +102,15 @@ class Tree:
         for i, source in enumerate(sources):
             destination = self.destinations[i]
 
-            n = 0
+            num_duplicates = 0
             new_name = destination.name
             while True:
                 renamed = False
                 for j, other in enumerate(self.destinations):
                     if new_name == other.name and i != j:
-                        n += 1
+                        num_duplicates += 1
                         renamed = True
-                        new_name = f"{destination.stem} ({n}){destination.suffix}"
+                        new_name = f"{destination.stem} ({num_duplicates}){destination.suffix}"
 
                 if not renamed:
                     self.destinations[i] = destination.parent / new_name
@@ -119,9 +119,9 @@ class Tree:
             os.makedirs(destination.parent, exist_ok=True)
             shutil.move(str(source), str(self.destinations[i]))
 
-        for d in self.root.rglob("*"):
-            if d.is_dir() and len([f for f in d.rglob("*") if not f.is_dir()]) == 0:
-                if d.exists():
-                    shutil.rmtree(d)
+        for path in self.root.rglob("*"):
+            if path.is_dir() and len([f for f in path.rglob("*") if not f.is_dir()]) == 0:
+                if path.exists():
+                    shutil.rmtree(path)
 
         return self
