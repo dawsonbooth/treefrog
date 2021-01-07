@@ -1,22 +1,29 @@
-from slippi.id import InGameCharacter, Stage
+from slippi import Game
 
-from .format import character_name, stage_name, timestamp
+from .parse import (Character, DateTime, NetplayCode, NetplayName,
+                    OpponentCharacter, OpponentNetplayCode,
+                    OpponentNetplayName, Stage)
 
-
-def default_filename(
-    year: int, month: int, day: int, hour: int, minute: int, second: int, **kwargs
-) -> str:
-    return f"Game_{timestamp(year, month, day, hour, minute, second)}.slp"
+# TODO: Remove reliance on netplay code and use P1/P2 names/codes/characters
 
 
-def create_filename(
-    name: str, code: str, character: InGameCharacter,
-    opponent_name: str, opponent_code: str, opponent_character: InGameCharacter,
-    stage: Stage, year: int, month: int, day: int, hour: int, minute: int, second: int
-) -> str:
-    players = " vs ".join((
-        f"[{code}] {name} ({character_name(character)})",
-        f"[{opponent_code}] {opponent_name} ({character_name(opponent_character)})"
-    ))
+def default_filename(source: str, **kwargs) -> str:
+    game = Game(source)
+    return f"Game_{DateTime(game)}.slp"
 
-    return " - ".join((timestamp(year, month, day, hour, minute, second), players, stage_name(stage))) + ".slp"
+
+def create_filename(source: str, netplay_code: str = None) -> str:
+    game = Game(source)
+
+    code = NetplayCode(game, netplay_code=netplay_code)
+    name = NetplayName(game, netplay_code=netplay_code)
+    character = Character(game, netplay_code=netplay_code)
+
+    opponent_code = OpponentNetplayCode(game, netplay_code=netplay_code)
+    opponent_name = OpponentNetplayName(game, netplay_code=netplay_code)
+    opponent_character = OpponentCharacter(game, netplay_code=netplay_code)
+
+    timestamp = DateTime(game)
+    stage = Stage(game)
+
+    return f"{timestamp} - [{code}] {name} ({character}) vs [{opponent_code}] {opponent_name} ({opponent_character}) - {stage}.slp"

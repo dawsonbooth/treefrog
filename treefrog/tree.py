@@ -7,8 +7,7 @@ from typing import List
 
 from tqdm import tqdm
 
-from .hierarchy import Hierarchy, game_characteristics
-from .organize import default_ordering, organized_path
+from .organize import Ordering, default_ordering, organized_path
 from .parse import ParseError
 from .rename import create_filename
 
@@ -27,7 +26,7 @@ class Tree:
 
     def organize(
         self,
-        ordering: Hierarchy.Ordering = default_ordering,
+        ordering: Ordering = default_ordering,
         show_progress: bool = False
     ) -> Tree:
         sources = self.sources
@@ -36,13 +35,13 @@ class Tree:
 
         for i, source in enumerate(sources):
             try:
-                destination = organized_path(
+                rel_path = organized_path(
                     str(source), self.netplay_code, ordering
                 )
             except ParseError:
-                destination = Path("Error") / Path(source).name
+                rel_path = Path("Error") / Path(source).name
 
-            self.destinations[i] = self.root / destination
+            self.destinations[i] = self.root / rel_path
 
         return self
 
@@ -63,15 +62,11 @@ class Tree:
 
         for i, destination in enumerate(destinations):
             try:
-                characteristics = game_characteristics(
-                    str(self.sources[i]), self.netplay_code)
+                new_name = create_filename(
+                    str(self.sources[i]), netplay_code=self.netplay_code)
+                self.destinations[i] = destination.parent / new_name
             except ParseError:
-                self.destinations[i] = self.root / \
-                    "Error" / destination.name
-                continue
-
-            self.destinations[i] = destination.parent / \
-                create_filename(**characteristics)
+                self.destinations[i] = self.root / "Error" / destination.name
 
         return self
 

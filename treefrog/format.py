@@ -1,3 +1,4 @@
+from datetime import datetime
 from slippi.id import InGameCharacter, Stage
 
 
@@ -19,5 +20,5 @@ def stage_name(stage: Stage) -> str:
     return stage.name.replace("_", " ").title()
 
 
-def timestamp(year: int, month: int, day: int, hour: int, minute: int, second: int):
-    return f"{year}{month:02}{day:02}T{hour:02}{minute:02}{second:02}"
+def timestamp(dt: datetime):
+    return f"{dt.year}{dt.month:02}{dt.day:02}T{dt.hour:02}{dt.minute:02}{dt.second:02}"
