@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Dict, Iterable, Sequence
+from typing import Any, Dict
 
 from slippi.event import Start
 from slippi.metadata import Metadata
@@ -21,9 +21,6 @@ class Hierarchy():
         HOUR = "hour"
         MINUTE = "minute"
         SECOND = "second"
-
-    Level = Iterable[Member]
-    Ordering = Sequence[Level]
 
 
 def game_characteristics(game_path: str, netplay_code: str) -> Dict[Hierarchy.Member, Any]:
@@ -65,21 +62,3 @@ def game_characteristics(game_path: str, netplay_code: str) -> Dict[Hierarchy.Me
     parse(game_path, handlers)
 
     return characteristics
-
-
-default_ordering: Hierarchy.Ordering = (
-    {
-        Hierarchy.Member.YEAR,
-        Hierarchy.Member.MONTH
-    },
-    {
-        Hierarchy.Member.OPPONENT_CODE
-    },
-    {
-        Hierarchy.Member.CHARACTER,
-        Hierarchy.Member.OPPONENT_CHARACTER
-    },
-    {
-        Hierarchy.Member.STAGE
-    },
-)

@@ -3,14 +3,22 @@ from __future__ import annotations
 import os
 import shutil
 from pathlib import Path
-from typing import Callable, List, Optional, Sequence
+from typing import List
 
-from slippi.parse import ParseError
+from slippi.game import Game
 from tqdm import tqdm
 
-from .format import default_format
-from .hierarchy import Hierarchy, default_ordering, game_characteristics
+from .hierarchy import Hierarchy, game_characteristics
+from .parse import Matchup, Month, OpponentNetplayCode, ParseError, Stage, Year
 from .rename import create_filename
+
+default_ordering = (
+    Year,
+    Month,
+    OpponentNetplayCode,
+    Matchup,
+    Stage
+)
 
 
 class Tree:
@@ -28,7 +36,6 @@ class Tree:
     def organize(
         self,
         ordering: Hierarchy.Ordering = default_ordering,
-        formatting: Optional[Sequence[Callable[..., str]]] = None,
         show_progress: bool = False
     ) -> Tree:
         destinations = self.destinations
@@ -36,28 +43,21 @@ class Tree:
             destinations = tqdm(self.destinations, desc="Organize")
 
         for i, destination in enumerate(destinations):
-            try:
-                characteristics = game_characteristics(
-                    str(self.sources[i]), self.netplay_code)
-            except ParseError:
-                self.destinations[i] = self.root / \
-                    "Error" / destination.name
-                continue
-
             self.destinations[i] = self.root
+            try:
+                game = Game(str(self.sources[i]))
 
-            for rank, level in enumerate(ordering):
-                format_func = default_format
-                if formatting and formatting[rank]:
-                    format_func = formatting[rank]
+                for parser in ordering:
+                    game_attribute = parser(
+                        game, netplay_code=self.netplay_code)
+                    self.destinations[i] /= str(game_attribute)
 
-                attributes = dict(
-                    (str(peer), characteristics[peer]) for peer in level
-                )
+                self.destinations[i] /= destination.name
 
-                self.destinations[i] /= format_func(**attributes)
-
-            self.destinations[i] /= destination.name
+            except ParseError:
+                self.destinations[i] /= "Error"
+                self.destinations[i] /= destination.name
+                continue
 
         return self
 
