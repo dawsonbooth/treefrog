@@ -96,7 +96,8 @@ class Tree:
                     break
 
             os.makedirs(destination.parent, exist_ok=True)
-            shutil.move(str(self.sources), str(self.destinations[i]))
+            shutil.move(str(self.sources[i]), str(self.destinations[i]))
+            self.sources[i] = self.destinations[i]
 
         for path in self.root.rglob("*"):
             if path.is_dir() and len([f for f in path.rglob("*") if not f.is_dir()]) == 0:
