@@ -35,9 +35,13 @@ class Tree:
             sources = tqdm(sources, desc="Organize")
 
         for i, source in enumerate(sources):
-            destination = organized_path(
-                str(source), self.netplay_code, ordering
-            )
+            try:
+                destination = organized_path(
+                    str(source), self.netplay_code, ordering
+                )
+            except ParseError:
+                destination = Path("Error") / Path(source).name
+
             self.destinations[i] = self.root / destination
 
         return self

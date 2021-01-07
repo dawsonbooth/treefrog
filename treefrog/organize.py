@@ -20,14 +20,10 @@ default_ordering = (
 def organized_path(source: str, netplay_code: str, ordering: Ordering = default_ordering):
     path = Path()
 
-    try:
-        game = Game(source)
+    game = Game(source)
 
-        for parser in ordering:
-            game_attribute = parser(game, netplay_code=netplay_code)
-            path /= str(game_attribute)
-
-    except ParseError:
-        path = Path("Error")
+    for parser in ordering:
+        game_attribute = parser(game, netplay_code=netplay_code)
+        path /= str(game_attribute)
 
     return path / Path(source).name
