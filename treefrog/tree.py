@@ -5,20 +5,12 @@ import shutil
 from pathlib import Path
 from typing import List
 
-from slippi.game import Game
 from tqdm import tqdm
 
 from .hierarchy import Hierarchy, game_characteristics
-from .parse import Matchup, Month, OpponentNetplayCode, ParseError, Stage, Year
+from .organize import default_ordering, organized_path
+from .parse import ParseError
 from .rename import create_filename
-
-default_ordering = (
-    Year,
-    Month,
-    OpponentNetplayCode,
-    Matchup,
-    Stage
-)
 
 
 class Tree:
@@ -38,26 +30,15 @@ class Tree:
         ordering: Hierarchy.Ordering = default_ordering,
         show_progress: bool = False
     ) -> Tree:
-        destinations = self.destinations
+        sources = self.sources
         if show_progress:
-            destinations = tqdm(self.destinations, desc="Organize")
+            sources = tqdm(sources, desc="Organize")
 
-        for i, destination in enumerate(destinations):
-            self.destinations[i] = self.root
-            try:
-                game = Game(str(self.sources[i]))
-
-                for parser in ordering:
-                    game_attribute = parser(
-                        game, netplay_code=self.netplay_code)
-                    self.destinations[i] /= str(game_attribute)
-
-                self.destinations[i] /= destination.name
-
-            except ParseError:
-                self.destinations[i] /= "Error"
-                self.destinations[i] /= destination.name
-                continue
+        for i, source in enumerate(sources):
+            destination = organized_path(
+                str(source), self.netplay_code, ordering
+            )
+            self.destinations[i] = self.root / destination
 
         return self
 
