@@ -1,7 +1,7 @@
 from slippi import Game
 
-from .parse.parsers import stage, timestamp
-from .parse.utils import character_name, characters
+from ..parse.parsers import stage, timestamp
+from ..parse.utils import character_name, characters
 
 
 def default_filename(game: Game) -> str:

@@ -3,8 +3,8 @@ from typing import Sequence
 
 from slippi.game import Game
 
-from .parse import Parser
-from .parse.parsers import matchup, month, stage, year
+from ..parse import Parser
+from ..parse.parsers import matchup, month, stage, year
 
 Ordering = Sequence[Parser]
 
