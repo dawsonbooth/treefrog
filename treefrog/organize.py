@@ -3,27 +3,23 @@ from typing import Sequence
 
 from slippi.game import Game
 
-from .parse import Matchup, Month, OpponentNetplayCode, ParseError, Parser, Stage, Year
+from .parse import Parser
+from .parse.parsers import matchup, month, stage, year
 
 Ordering = Sequence[Parser]
 
-
 default_ordering = (
-    Year,
-    Month,
-    OpponentNetplayCode,
-    Matchup,
-    Stage
+    year,
+    month,
+    matchup,  # TODO: Add player information
+    stage
 )
 
 
-def organized_path(source: str, netplay_code: str, ordering: Ordering = default_ordering):
-    path = Path()
-
-    game = Game(source)
+def build_parent(game: Game, ordering: Ordering = default_ordering) -> Path:
+    parent = Path()
 
     for parser in ordering:
-        game_attribute = parser(game, netplay_code=netplay_code)
-        path /= str(game_attribute)
+        parent /= str(parser(game))
 
-    return path / Path(source).name
+    return parent

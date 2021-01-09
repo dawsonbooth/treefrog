@@ -3,6 +3,8 @@ import sys
 from pathlib import Path
 
 from . import Tree
+from .parse.parsers import matchup, month, stage, year
+from .parse.utils import opponent
 
 
 def main() -> int:
@@ -25,12 +27,23 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    tree = Tree(args.root_folder, args.netplay_code)
+    tree = Tree(args.root_folder)
 
     if args.flatten:
         tree.flatten(show_progress=args.show_progress)
     if args.organize:
-        tree.organize(show_progress=args.show_progress)
+        def opponent_netplay_code(game):
+            return opponent(game, args.netplay_code).netplay.code
+
+        ordering = (  # TODO: Use this only if *optional* netplay code is provided, otherwise default
+            year,
+            month,
+            opponent_netplay_code,
+            matchup,
+            stage
+        )
+
+        tree.organize(show_progress=args.show_progress, ordering=ordering)
     if args.rename:
         tree.rename(show_progress=args.show_progress)
 

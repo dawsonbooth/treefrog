@@ -5,9 +5,10 @@ import shutil
 from pathlib import Path
 from typing import List
 
+from slippi.game import Game
 from tqdm import tqdm
 
-from .organize import Ordering, default_ordering, organized_path
+from .organize import Ordering, build_parent, default_ordering
 from .parse import ParseError
 from .rename import create_filename
 
@@ -16,13 +17,11 @@ class Tree:
     root: Path
     sources: List[Path]
     destinations: List[Path]
-    netplay_code: str
 
-    def __init__(self, root_folder: str, netplay_code: str):
+    def __init__(self, root_folder: str):
         self.root = Path(root_folder)
         self.sources = list(self.root.rglob("*.slp"))
         self.destinations = list(p for p in self.sources)
-        self.netplay_code = netplay_code
 
     def organize(
         self,
@@ -35,11 +34,10 @@ class Tree:
 
         for i, source in enumerate(sources):
             try:
-                rel_path = organized_path(
-                    str(source), self.netplay_code, ordering
-                )
+                game = Game(str(source))
+                rel_path = build_parent(game, ordering) / source.name
             except ParseError:
-                rel_path = Path("Error") / Path(source).name
+                rel_path = Path("Error") / source.name
 
             self.destinations[i] = self.root / rel_path
 
@@ -62,8 +60,8 @@ class Tree:
 
         for i, destination in enumerate(destinations):
             try:
-                new_name = create_filename(
-                    str(self.sources[i]), netplay_code=self.netplay_code)
+                game = Game(str(self.sources[i]))
+                new_name = create_filename(game)
                 self.destinations[i] = destination.parent / new_name
             except ParseError:
                 self.destinations[i] = self.root / "Error" / destination.name
