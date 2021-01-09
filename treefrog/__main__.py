@@ -4,7 +4,7 @@ from pathlib import Path
 
 from . import Tree
 from .parse.parsers import matchup, month, stage, year
-from .parse.utils import opponent
+from .parse.utils import character_name, most_used_character, opponent, user
 
 
 def main() -> int:
@@ -14,7 +14,7 @@ def main() -> int:
     group = parser.add_mutually_exclusive_group()
     parser.add_argument('root_folder', type=Path,
                         help='Slippi folder root path')
-    parser.add_argument('-c', '--netplay-code', type=str, required=True,
+    parser.add_argument('-c', '--netplay-code', type=str,
                         help='Netplay code (e.g. DTB#566)')
     group.add_argument('-o', '--organize', action='store_true',
                        help='Whether to organize the folder hierarchy')
@@ -32,18 +32,27 @@ def main() -> int:
     if args.flatten:
         tree.flatten(show_progress=args.show_progress)
     if args.organize:
-        def opponent_netplay_code(game):
-            return opponent(game, args.netplay_code).netplay.code
+        if args.netplay_code:
 
-        ordering = (  # TODO: Use this only if *optional* netplay code is provided, otherwise default
-            year,
-            month,
-            opponent_netplay_code,
-            matchup,
-            stage
-        )
+            def opponent_netplay_code(game):
+                return opponent(game, args.netplay_code).netplay.code
 
-        tree.organize(show_progress=args.show_progress, ordering=ordering)
+            def ordered_matchup(game):
+                p1 = user(game, args.netplay_code)
+                p2 = opponent(game, args.netplay_code)
+                return f"{character_name(most_used_character(p1))} vs {character_name(most_used_character(p2))}"
+
+            ordering = (
+                year,
+                month,
+                opponent_netplay_code,
+                ordered_matchup,
+                stage
+            )
+
+            tree.organize(show_progress=args.show_progress, ordering=ordering)
+        else:
+            tree.organize(show_progress=args.show_progress)
     if args.rename:
         tree.rename(show_progress=args.show_progress)
 
