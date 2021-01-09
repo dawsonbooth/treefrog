@@ -28,16 +28,16 @@ class Tree:
         ordering: Ordering = default_ordering,
         show_progress: bool = False
     ) -> Tree:
-        sources = self.sources
+        destinations = self.destinations
         if show_progress:
-            sources = tqdm(sources, desc="Organize")
+            destinations = tqdm(destinations, desc="Organize")
 
-        for i, source in enumerate(sources):
+        for i, destination in enumerate(destinations):
             try:
-                game = Game(str(source))
-                rel_path = build_parent(game, ordering) / source.name
+                game = Game(str(self.sources[i]))
+                rel_path = build_parent(game, ordering) / destination.name
             except ParseError:
-                rel_path = Path("Error") / source.name
+                rel_path = Path("Error") / destination.name
 
             self.destinations[i] = self.root / rel_path
 
