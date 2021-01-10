@@ -28,7 +28,7 @@ def type_check(c):
 
 @task
 def test(c):
-    c.run("pytest treefrog/test")
+    c.run("pytest test.py")
 
 
 @task
