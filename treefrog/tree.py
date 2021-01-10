@@ -22,40 +22,22 @@ class Tree:
         self.sources = tuple(self.root.rglob("*.slp"))
         self.destinations = list(self.sources)
 
-    def organize(
-        self,
-        ordering: Ordering = default_ordering,
-        show_progress: bool = False
-    ) -> Tree:
-        destinations = self.destinations
-        if show_progress:
-            destinations = tqdm(self.destinations, desc="Organize")
-
-        for i, destination in enumerate(destinations):
+    def organize(self, ordering: Ordering = default_ordering) -> Tree:
+        for i, destination in enumerate(self.destinations):
             game = Game(self.sources[i])
-
             parent = build_parent(game, ordering)
-
             self.destinations[i] = self.root / parent / destination.name
 
         return self
 
-    def flatten(self, show_progress) -> Tree:
-        destinations = self.destinations
-        if show_progress:
-            destinations = tqdm(self.destinations, desc="Flatten")
-
-        for i, destination in enumerate(destinations):
+    def flatten(self) -> Tree:
+        for i, destination in enumerate(self.destinations):
             self.destinations[i] = self.root / destination.name
 
         return self
 
-    def rename(self, create_filename=create_filename, show_progress=False) -> Tree:
-        destinations = self.destinations
-        if show_progress:
-            destinations = tqdm(self.destinations, desc="Rename")
-
-        for i, destination in enumerate(destinations):
+    def rename(self, create_filename=create_filename) -> Tree:
+        for i, destination in enumerate(self.destinations):
             game = Game(self.sources[i])
             self.destinations[i] = destination.parent / create_filename(game)
 
@@ -67,6 +49,10 @@ class Tree:
             destinations = tqdm(self.destinations, desc="Resolve")
 
         for i, destination in enumerate(destinations):
+            # Perform operations
+            # TODO
+
+            # Rename if duplicate
             num_duplicates = 0
             new_name = destination.name
             while True:
@@ -81,6 +67,7 @@ class Tree:
                     self.destinations[i] = destination.parent / new_name
                     break
 
+            # Move
             os.makedirs(destination.parent, exist_ok=True)
             shutil.move(str(self.sources[i]), str(self.destinations[i]))
 

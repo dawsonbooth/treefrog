@@ -23,17 +23,17 @@ def organize(tree: Tree, args):
             stage
         )
 
-        tree.organize(show_progress=args.show_progress, ordering=ordering)
+        tree.organize(ordering=ordering)
     else:
-        tree.organize(show_progress=args.show_progress)
+        tree.organize()
 
 
 def flatten(tree: Tree, args):
-    tree.flatten(show_progress=args.show_progress)
+    tree.flatten()
 
 
 def rename(tree: Tree, args):
-    tree.rename(show_progress=args.show_progress)
+    tree.rename()
 
 
 root_folder = {
