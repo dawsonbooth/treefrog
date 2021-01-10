@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import calendar
+from datetime import timezone
 
 from slippi import Game
 
@@ -17,7 +18,8 @@ def stage(game: Game) -> str:
 
 
 def timestamp(game: Game) -> str:
-    dt = game.metadata.date
+    utc_dt = game.metadata.date
+    dt = utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
     return f"{dt.year}{dt.month:02}{dt.day:02}T{dt.hour:02}{dt.minute:02}{dt.second:02}"
 
 
