@@ -17,7 +17,7 @@ class Tree:
     sources: Tuple[Path]
     destinations: List[Path]
 
-    def __init__(self, root_folder: str):
+    def __init__(self, root_folder: str | os.PathLike[str]):
         self.root = Path(root_folder)
         self.sources = tuple(self.root.rglob("*.slp"))
         self.destinations = list(self.sources)
