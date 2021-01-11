@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import shutil
 from pathlib import Path
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List, Tuple, Union
 
 from slippi.game import Game
 from tqdm import tqdm
@@ -16,12 +16,12 @@ class Tree:
     root: Path
     show_progress: bool
 
-    sources: Tuple[Path]
+    sources: Tuple[Path, ...]
     destinations: List[Path]
     operations: Dict[str, Callable[[Path, Game], Path]]
     should_resolve: bool
 
-    def __init__(self, root_folder: str | os.PathLike[str], show_progress: bool = False):
+    def __init__(self, root_folder: Union[str, os.PathLike[str]], show_progress: bool = False):
         self.root = Path(root_folder)
         self.show_progress = show_progress
         self.reset()
@@ -99,7 +99,6 @@ class Tree:
     def __enter__(self) -> Tree:
         return self
 
-    def __exit__(self, *args) -> bool:
+    def __exit__(self, *args) -> None:
         if None in args:
             self.resolve()
-        return False
