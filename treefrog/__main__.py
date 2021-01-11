@@ -24,16 +24,13 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    tree = Tree(args.root_folder)
-
-    if args.flatten:
-        flatten(tree, args)
-    if args.organize:
-        organize(tree, args)
-    if args.rename:
-        rename(tree, args)
-
-    tree.resolve(show_progress=args.show_progress)
+    with Tree(args.root_folder, show_progress=args.show_progress) as tree:
+        if args.flatten:
+            flatten(tree, args)
+        if args.organize:
+            organize(tree, args)
+        if args.rename:
+            rename(tree, args)
 
     return 0
 

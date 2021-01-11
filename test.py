@@ -1,45 +1,48 @@
 from pathlib import Path
-from treefrog.rename import default_filename
-from treefrog import Tree
 
+from treefrog import Tree
+from treefrog.rename import default_filename
 
 root_folder = Path("slp")
 
 original_hierarchy = tuple(root_folder.rglob("*.slp"))
 
 
-def restore_tree(tree: Tree):
-    tree.flatten().rename(create_filename=default_filename).resolve()
+def restore_hierarchy():
+    with Tree(root_folder) as tree:
+        tree.flatten().rename(create_filename=default_filename)
 
 
 def test_flatten():
-    tree = Tree(root_folder)
-    tree.flatten().resolve()
-    hierarchy = tuple(root_folder.rglob("*.slp"))
+    with Tree(root_folder) as tree:
+        tree.flatten()
 
-    assert len(hierarchy) == len(original_hierarchy)
-    assert hierarchy != original_hierarchy
+    hierarchy = tuple(root_folder.glob("*.slp"))
 
-    restore_tree(tree)
+    assert hierarchy == original_hierarchy
+
+    restore_hierarchy()
 
 
 def test_rename():
-    tree = Tree(root_folder)
-    tree.rename().resolve()
+    with Tree(root_folder) as tree:
+        tree.rename()
+
     hierarchy = tuple(root_folder.rglob("*.slp"))
 
     assert len(hierarchy) == len(original_hierarchy)
     assert hierarchy != original_hierarchy
 
-    restore_tree(tree)
+    restore_hierarchy()
 
 
 def test_organize():
-    tree = Tree(root_folder)
-    tree.organize().resolve()
+    with Tree(root_folder) as tree:
+        tree.organize()
+
     hierarchy = tuple(root_folder.rglob("*.slp"))
 
     assert len(hierarchy) == len(original_hierarchy)
     assert hierarchy != original_hierarchy
 
-    restore_tree(tree)
+    restore_hierarchy()

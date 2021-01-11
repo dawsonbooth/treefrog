@@ -15,11 +15,8 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    tree = Tree(args.root_folder)
-
-    organize(tree, args)
-
-    tree.resolve(show_progress=args.show_progress)
+    with Tree(args.root_folder, show_progress=args.show_progress) as tree:
+        organize(tree, args)
 
     return 0
 

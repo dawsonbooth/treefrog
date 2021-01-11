@@ -14,13 +14,16 @@ from .rename import create_filename
 
 class Tree:
     root: Path
+    show_progress: bool
 
     sources: Tuple[Path]
     destinations: List[Path]
     operations: Dict[str, Callable[[Path, Game], Path]]
+    should_resolve: bool
 
-    def __init__(self, root_folder: str | os.PathLike[str]):
+    def __init__(self, root_folder: str | os.PathLike[str], show_progress: bool = False):
         self.root = Path(root_folder)
+        self.show_progress = show_progress
         self.reset()
 
     def reset(self) -> Tree:
@@ -49,10 +52,10 @@ class Tree:
 
         return self
 
-    def resolve(self, show_progress=False) -> Tree:
+    def resolve(self) -> Tree:
         sources = self.sources
         destinations = self.destinations
-        if show_progress:
+        if self.show_progress:
             sources = tqdm(sources, desc="Process games")
             destinations = tqdm(destinations, desc="Move files")
 
@@ -92,3 +95,11 @@ class Tree:
         self.reset()
 
         return self
+
+    def __enter__(self) -> Tree:
+        return self
+
+    def __exit__(self, *args) -> bool:
+        if None in args:
+            self.resolve()
+        return False
