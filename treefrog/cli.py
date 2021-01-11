@@ -2,6 +2,7 @@ from pathlib import Path
 
 from .parse.parsers import month, stage, year
 from .parse.utils import character_name, most_used_character, opponent, user
+from .rename import default_filename
 from .tree import Tree
 
 
@@ -33,7 +34,10 @@ def flatten(tree: Tree, args):
 
 
 def rename(tree: Tree, args):
-    tree.rename()
+    if args.default_rename:
+        tree.rename(create_filename=default_filename)
+    else:
+        tree.rename()
 
 
 root_folder = {
@@ -50,6 +54,14 @@ netplay_code = {
     "kwargs": {
         "type": str,
         "help": 'Netplay code (e.g. DTB#566)'
+    }
+}
+
+default_rename = {
+    "args": ['-d', '--default-rename'],
+    "kwargs": {
+        "action": "store_true",
+        "help": "Whether to restore the filenames to their defaults"
     }
 }
 

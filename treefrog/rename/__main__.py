@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from .. import Tree
-from ..cli import rename, root_folder, show_progress
+from ..cli import default_rename, rename, root_folder, show_progress
 
 
 def main() -> int:
@@ -11,6 +11,7 @@ def main() -> int:
     )
     parser.add_argument(*root_folder["args"], **root_folder["kwargs"])
     parser.add_argument(*show_progress["args"], **show_progress["kwargs"])
+    parser.add_argument(*default_rename["args"], **default_rename["kwargs"])
 
     args = parser.parse_args()
 
