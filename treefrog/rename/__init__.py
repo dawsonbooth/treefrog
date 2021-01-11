@@ -11,7 +11,7 @@ def default_filename(game: Game) -> str:
 
 def create_filename(game: Game) -> str:
     try:
-        p1, p2 = tuple(characters(game))  # TODO: Add player information
+        p1, p2 = tuple(characters(game))
         return f"{timestamp(game)} - {character_name(p1)} vs {character_name(p2)} - {stage(game)}.slp"
     except ParseError:
         return default_filename(game)

@@ -12,7 +12,7 @@ Ordering = Sequence[Parser]
 default_ordering = (
     year,
     month,
-    matchup,  # TODO: Add player information
+    matchup,
     stage
 )
 
