@@ -5,6 +5,8 @@ from treefrog import Tree
 
 root_folder = Path("slp")
 
+original_hierarchy = tuple(root_folder.rglob("*.slp"))
+
 
 def restore_tree(tree: Tree):
     tree.flatten().rename(create_filename=default_filename).resolve()
@@ -13,8 +15,10 @@ def restore_tree(tree: Tree):
 def test_flatten():
     tree = Tree(root_folder)
     tree.flatten().resolve()
+    hierarchy = tuple(root_folder.rglob("*.slp"))
 
-    assert len(list(root_folder.glob("*.slp"))) == 36
+    assert len(hierarchy) == len(original_hierarchy)
+    assert hierarchy != original_hierarchy
 
     restore_tree(tree)
 
@@ -22,8 +26,10 @@ def test_flatten():
 def test_rename():
     tree = Tree(root_folder)
     tree.rename().resolve()
+    hierarchy = tuple(root_folder.rglob("*.slp"))
 
-    assert len(list(root_folder.glob("*.slp"))) == 36
+    assert len(hierarchy) == len(original_hierarchy)
+    assert hierarchy != original_hierarchy
 
     restore_tree(tree)
 
@@ -31,7 +37,9 @@ def test_rename():
 def test_organize():
     tree = Tree(root_folder)
     tree.organize().resolve()
+    hierarchy = tuple(root_folder.rglob("*.slp"))
 
-    assert len(list(root_folder.rglob("*.slp"))) == 36
+    assert len(hierarchy) == len(original_hierarchy)
+    assert hierarchy != original_hierarchy
 
     restore_tree(tree)
