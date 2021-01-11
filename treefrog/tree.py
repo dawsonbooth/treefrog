@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import shutil
 from pathlib import Path
-from typing import List, Tuple
+from typing import Callable, Dict, List, Tuple
 
 from slippi.game import Game
 from tqdm import tqdm
@@ -14,44 +14,56 @@ from .rename import create_filename
 
 class Tree:
     root: Path
+
     sources: Tuple[Path]
     destinations: List[Path]
+    operations: Dict[str, Callable[[Path, Game], Path]]
 
     def __init__(self, root_folder: str | os.PathLike[str]):
         self.root = Path(root_folder)
+        self.reset()
+
+    def reset(self) -> Tree:
         self.sources = tuple(self.root.rglob("*.slp"))
         self.destinations = list(self.sources)
+        self.operations = dict()
+
+        return self
 
     def organize(self, ordering: Ordering = default_ordering) -> Tree:
-        for i, destination in enumerate(self.destinations):
-            game = Game(self.sources[i])
-            parent = build_parent(game, ordering)
-            self.destinations[i] = self.root / parent / destination.name
+        self.operations["organize"] = lambda path, game: self.root / \
+            build_parent(game, ordering) / path.name
+        self.operations.pop("flatten", None)
 
         return self
 
     def flatten(self) -> Tree:
-        for i, destination in enumerate(self.destinations):
-            self.destinations[i] = self.root / destination.name
+        self.operations["flatten"] = lambda path, _: self.root / path.name
+        self.operations.pop("organize", None)
 
         return self
 
     def rename(self, create_filename=create_filename) -> Tree:
-        for i, destination in enumerate(self.destinations):
-            game = Game(self.sources[i])
-            self.destinations[i] = destination.parent / create_filename(game)
+        self.operations["rename"] = lambda path, game: path.parent / \
+            create_filename(game)
 
         return self
 
     def resolve(self, show_progress=False) -> Tree:
+        sources = self.sources
         destinations = self.destinations
         if show_progress:
-            destinations = tqdm(self.destinations, desc="Resolve")
+            sources = tqdm(sources, desc="Process games")
+            destinations = tqdm(destinations, desc="Move files")
+
+        for i, source in enumerate(sources):
+            game = Game(source)
+
+            # Perform operations
+            for operation in self.operations.values():
+                self.destinations[i] = operation(self.destinations[i], game)
 
         for i, destination in enumerate(destinations):
-            # Perform operations
-            # TODO
-
             # Rename if duplicate
             num_duplicates = 0
             new_name = destination.name
@@ -67,15 +79,16 @@ class Tree:
                     self.destinations[i] = destination.parent / new_name
                     break
 
-            # Move
+            # Move file
             os.makedirs(destination.parent, exist_ok=True)
             shutil.move(str(self.sources[i]), str(self.destinations[i]))
 
-        self.sources = tuple(self.destinations)
-
+        # Remove empty folders
         for path in self.root.rglob("*"):
             if path.is_dir() and len([f for f in path.rglob("*") if not f.is_dir()]) == 0:
                 if path.exists():
                     shutil.rmtree(path)
+
+        self.reset()
 
         return self
