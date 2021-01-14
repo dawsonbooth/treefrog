@@ -13,10 +13,7 @@ Parser = Callable[[Game], str]
 
 
 def most_used_character(player: Metadata.Player) -> InGameCharacter:
-    return sorted(
-        player.characters.keys(),
-        key=lambda c: player.characters[c]
-    )[0]
+    return sorted(player.characters.keys(), key=lambda c: player.characters[c])[0]
 
 
 def ports(game: Game) -> Generator[int, None, None]:

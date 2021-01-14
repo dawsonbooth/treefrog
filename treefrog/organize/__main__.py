@@ -7,7 +7,7 @@ from ..cli import netplay_code, organize, root_folder, show_progress
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description='Move your Slippi game files to nested folders according to their features'
+        description="Move your Slippi game files to nested folders according to their features"
     )
     parser.add_argument(*root_folder["args"], **root_folder["kwargs"])
     parser.add_argument(*netplay_code["args"], **netplay_code["kwargs"])

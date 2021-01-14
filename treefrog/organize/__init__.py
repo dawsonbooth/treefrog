@@ -9,12 +9,7 @@ from ..parse.utils import ParseError
 
 Ordering = Sequence[Parser]
 
-default_ordering = (
-    year,
-    month,
-    matchup,
-    stage
-)
+default_ordering = (year, month, matchup, stage)
 
 
 def build_parent(game: Game, ordering: Ordering = default_ordering) -> Path:

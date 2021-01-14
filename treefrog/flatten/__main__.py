@@ -6,9 +6,7 @@ from ..cli import flatten, root_folder, show_progress
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description='Rename your Slippi game files according to their features'
-    )
+    parser = argparse.ArgumentParser(description="Rename your Slippi game files according to their features")
     parser.add_argument(*root_folder["args"], **root_folder["kwargs"])
     parser.add_argument(*show_progress["args"], **show_progress["kwargs"])
 

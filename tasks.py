@@ -17,8 +17,13 @@ def clean(c):
 
 
 @task
+def format(c):
+    c.run("black treefrog --line-length 119")
+
+
+@task
 def lint(c):
-    c.run("pylint treefrog")
+    c.run("flake8 treefrog --max-line-length 119 --extend-ignore E203")
 
 
 @task

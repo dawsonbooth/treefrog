@@ -34,8 +34,7 @@ class Tree:
         return self
 
     def organize(self, ordering: Ordering = default_ordering) -> Tree:
-        self.operations["organize"] = lambda path, game: self.root / \
-            build_parent(game, ordering) / path.name
+        self.operations["organize"] = lambda path, game: self.root / build_parent(game, ordering) / path.name
         self.operations.pop("flatten", None)
 
         return self
@@ -47,8 +46,7 @@ class Tree:
         return self
 
     def rename(self, create_filename=create_filename) -> Tree:
-        self.operations["rename"] = lambda path, game: path.parent / \
-            create_filename(game)
+        self.operations["rename"] = lambda path, game: path.parent / create_filename(game)
 
         return self
 
