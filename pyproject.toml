@@ -29,7 +29,7 @@ python = "^3.7"
 py-slippi = "^1.6.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.3.2"
+pytest = "^6.2.1"
 rope = "^0.18.0"
 mkdocs = "^1.1.2"
 pydoc-markdown = "^3.3.0"
