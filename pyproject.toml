@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "treefrog"
-version = "0.3.0"
+version = "0.3.1"
 description = "Organize the Slippi game files in your filesystem according to their attributes"
 authors = ["Dawson Booth <pypi@dawsonbooth.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/dawsonbooth/treefrog"
 repository = "https://github.com/dawsonbooth/treefrog"
-keywords = []
+keywords = ["filesystem", "slp", "slippi", "slippi-replays"]
 classifiers = [
     "Environment :: Console",
     "Programming Language :: Python :: 3",
