@@ -3,11 +3,7 @@ from typing import Callable, Generator
 from slippi import Game
 from slippi.id import InGameCharacter, Stage
 from slippi.metadata import Metadata
-
-
-class ParseError(Exception):
-    pass
-
+from slippi.parse import ParseError
 
 Parser = Callable[[Game], str]
 

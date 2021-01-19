@@ -9,6 +9,7 @@ from slippi.game import Game
 from tqdm import tqdm
 
 from .organize import Ordering, build_parent, default_ordering
+from .parse.utils import ParseError
 from .rename import create_filename
 
 
@@ -58,11 +59,13 @@ class Tree:
             destinations = tqdm(destinations, desc="Move files")
 
         for i, source in enumerate(sources):
-            game = Game(source)
-
             # Perform operations
-            for operation in self.operations.values():
-                self.destinations[i] = operation(self.destinations[i], game)
+            try:
+                game = Game(source)
+                for operation in self.operations.values():
+                    self.destinations[i] = operation(self.destinations[i], game)
+            except ParseError:
+                self.destinations[i] = self.root / "Error" / self.destinations[i].name
 
         for i, destination in enumerate(destinations):
             # Rename if duplicate
