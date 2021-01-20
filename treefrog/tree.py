@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from .organize import Ordering, build_parent, default_ordering
 from .parse.utils import ParseError
+from .parse.utils import games as parse_games
 from .rename import create_filename
 
 
@@ -52,19 +53,18 @@ class Tree:
         return self
 
     def resolve(self) -> Tree:
-        sources = self.sources
+        games = parse_games(self.sources)
         destinations = self.destinations
         if self.show_progress:
-            sources = tqdm(sources, desc="Process games")
+            games = tqdm(games, desc="Process games", total=len(self.sources))
             destinations = tqdm(destinations, desc="Move files")
 
-        for i, source in enumerate(sources):
+        for i, game in enumerate(games):
             # Perform operations
             try:
-                game = Game(source)
                 for operation in self.operations.values():
                     self.destinations[i] = operation(self.destinations[i], game)
-            except Exception:
+            except ParseError:
                 self.destinations[i] = self.root / "Error" / self.destinations[i].name
 
         for i, destination in enumerate(destinations):

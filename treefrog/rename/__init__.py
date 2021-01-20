@@ -1,7 +1,7 @@
 from slippi import Game
 
 from ..parse.parsers import stage, timestamp
-from ..parse.utils import ParseError, character_name, characters
+from ..parse.utils import character_name, characters
 
 
 def default_filename(game: Game) -> str:
@@ -9,8 +9,5 @@ def default_filename(game: Game) -> str:
 
 
 def create_filename(game: Game) -> str:
-    try:
-        p1, p2 = tuple(characters(game))
-        return f"{timestamp(game)} - {character_name(p1)} vs {character_name(p2)} - {stage(game)}.slp"
-    except ParseError:
-        return default_filename(game)
+    p1, p2 = tuple(characters(game))
+    return f"{timestamp(game)} - {character_name(p1)} vs {character_name(p2)} - {stage(game)}.slp"

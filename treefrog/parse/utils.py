@@ -1,19 +1,30 @@
-from typing import Callable, Generator
+from concurrent.futures import ProcessPoolExecutor
+from pathlib import Path
+from typing import Callable, Generator, Sequence
 
 from slippi import Game
 from slippi.id import InGameCharacter, Stage
 from slippi.metadata import Metadata
-from slippi.parse import ParseError
 
 Parser = Callable[[Game], str]
 
 
-def most_used_character(player: Metadata.Player) -> InGameCharacter:
-    return sorted(player.characters.keys(), key=lambda c: player.characters[c])[0]
+class ParseError(Exception):
+    pass
+
+
+def games(sources: Sequence[Path]) -> Generator[Game, None, None]:
+    with ProcessPoolExecutor() as executor:
+        for game in executor.map(Game, sources):
+            yield game
 
 
 def ports(game: Game) -> Generator[int, None, None]:
     return (p + 1 for p, player in enumerate(game.metadata.players) if player)
+
+
+def most_used_character(player: Metadata.Player) -> InGameCharacter:
+    return sorted(player.characters.keys(), key=lambda c: player.characters[c])[0]
 
 
 def players(game: Game) -> Generator[Metadata.Player, None, None]:
