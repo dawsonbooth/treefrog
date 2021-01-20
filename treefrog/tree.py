@@ -64,7 +64,7 @@ class Tree:
                 game = Game(source)
                 for operation in self.operations.values():
                     self.destinations[i] = operation(self.destinations[i], game)
-            except ParseError:
+            except Exception:
                 self.destinations[i] = self.root / "Error" / self.destinations[i].name
 
         for i, destination in enumerate(destinations):
