@@ -1,21 +1,25 @@
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from typing import Callable, Generator, Sequence
+from typing import Callable, Generator, Optional, Sequence
 
 from slippi import Game
 from slippi.id import InGameCharacter, Stage
 from slippi.metadata import Metadata
+from slippi.parse import ParseError
 
 Parser = Callable[[Game], str]
 
 
-class ParseError(Exception):
-    pass
+def _game(path: Path) -> Optional[Game]:
+    try:
+        return Game(path)
+    except ParseError:
+        return None
 
 
 def games(sources: Sequence[Path]) -> Generator[Game, None, None]:
     with ProcessPoolExecutor() as executor:
-        for game in executor.map(Game, sources):
+        for game in executor.map(_game, sources):
             yield game
 
 
@@ -36,21 +40,15 @@ def characters(game: Game) -> Generator[InGameCharacter, None, None]:
 
 
 def user(game: Game, netplay_code: str) -> Metadata.Player:
-    try:
-        for player in players(game):
-            if player.netplay.code == netplay_code:
-                return player
-    except AttributeError:
-        raise ParseError
+    for player in players(game):
+        if player.netplay.code == netplay_code:
+            return player
 
 
 def opponent(game: Game, netplay_code: str) -> Metadata.Player:
-    try:
-        for player in players(game):
-            if player.netplay.code != netplay_code:
-                return player
-    except AttributeError:
-        raise ParseError
+    for player in players(game):
+        if player.netplay.code != netplay_code:
+            return player
 
 
 def character_name(character: InGameCharacter) -> str:
