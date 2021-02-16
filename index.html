@@ -446,84 +446,84 @@
                   </a>
                 
                 
-                <h1 id="treefrog"><code>treefrog</code></h1>
+                <h1 id="treefrog"><code>treefrog</code><a class="headerlink" href="#treefrog" title="Permanent link">&para;</a></h1>
 <p><a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/v/treefrog.svg?style=flat" /></a>
 <a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/dw/treefrog.svg?style=flat" /></a>
 <a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/pyversions/treefrog.svg?style=flat" /></a>
 <a href="https://pypi.org/pypi/treefrog/"><img alt="" src="https://img.shields.io/pypi/format/treefrog.svg?style=flat" /></a>
 <a href="https://github.com/dawsonbooth/treefrog/blob/master/LICENSE"><img alt="" src="https://img.shields.io/pypi/l/treefrog.svg?style=flat" /></a></p>
-<h2 id="description">Description</h2>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>Organize the Slippi game files in your filesystem according to their attributes.</p>
-<h2 id="installation">Installation</h2>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>With <a href="https://www.python.org/downloads/">Python</a> installed, simply run the following command to add the package to your project.</p>
-<pre><code class="language-bash">pip install treefrog
-</code></pre>
-<h2 id="usage">Usage</h2>
-<h3 id="module">Module</h3>
+<div class="highlight"><pre><span></span><code>pip install treefrog
+</code></pre></div>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="module">Module<a class="headerlink" href="#module" title="Permanent link">&para;</a></h3>
 <p>Currently, the package supports organizing the files according to a supplied ordering of parsers, flattening the files against the supplied root folder, and renaming all the files according to their attributes. These may be accomplished programmatically with the use of the <code>Tree</code> class or through the command-line interface.</p>
-<h4 id="organize">Organize</h4>
+<h4 id="organize">Organize<a class="headerlink" href="#organize" title="Permanent link">&para;</a></h4>
 <p>The <code>organize</code> method serves the purpose of moving each game file found (deeply or otherwise) under the root folder to its proper location according to the supplied ordering of parsers. If no ordering is given, then treefrog will use its default. Here is a simple example of calling this method:</p>
-<pre><code class="language-python">from treefrog import Tree
-from treefrog.parse.parsers import year, month, matchup, stage
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">treefrog</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">treefrog.parse.parsers</span> <span class="kn">import</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">matchup</span><span class="p">,</span> <span class="n">stage</span>
 
-ordering = (
-    year,
-    month,
-    matchup,
-    stage
-) # An iterable of the desired levels of the hierarchy
+<span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">year</span><span class="p">,</span>
+    <span class="n">month</span><span class="p">,</span>
+    <span class="n">matchup</span><span class="p">,</span>
+    <span class="n">stage</span>
+<span class="p">)</span> <span class="c1"># An iterable of the desired levels of the hierarchy</span>
 
-with Tree(&quot;slp/&quot;, show_progress=True) as tree:
-    tree.organize(ordering) # Organize the files into subfolders according to the supplied attributes
-</code></pre>
+<span class="k">with</span> <span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;slp/&quot;</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">tree</span><span class="p">:</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">organize</span><span class="p">(</span><span class="n">ordering</span><span class="p">)</span> <span class="c1"># Organize the files into subfolders according to the supplied attributes</span>
+</code></pre></div>
 <p>Feel free to provide your own logic for formatting the names of the folders at a particular level with a corresponding iterable of functions:</p>
-<pre><code class="language-python">from treefrog import Tree
-from treefrog.parse.parsers import year, month, stage
-from treefrog.parse.utils import character_name, most_used_character, opponent, user
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">treefrog</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">treefrog.parse.parsers</span> <span class="kn">import</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">stage</span>
+<span class="kn">from</span> <span class="nn">treefrog.parse.utils</span> <span class="kn">import</span> <span class="n">character_name</span><span class="p">,</span> <span class="n">most_used_character</span><span class="p">,</span> <span class="n">opponent</span><span class="p">,</span> <span class="n">user</span>
 
-def ordered_matchup(game):
-    p1 = user(game, &quot;DTB#566&quot;)
-    p2 = opponent(game, &quot;DTB#566&quot;)
-    return f&quot;{character_name(most_used_character(p1))} vs {character_name(most_used_character(p2))}&quot;
+<span class="k">def</span> <span class="nf">ordered_matchup</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">user</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s2">&quot;DTB#566&quot;</span><span class="p">)</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">opponent</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s2">&quot;DTB#566&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">character_name</span><span class="p">(</span><span class="n">most_used_character</span><span class="p">(</span><span class="n">p1</span><span class="p">))</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">character_name</span><span class="p">(</span><span class="n">most_used_character</span><span class="p">(</span><span class="n">p2</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
 
-ordering = (
-    year,
-    month,
-    lambda game: opponent(game, &quot;DTB#566&quot;).netplay.code,
-    ordered_matchup,
-    stage
-)
+<span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">year</span><span class="p">,</span>
+    <span class="n">month</span><span class="p">,</span>
+    <span class="k">lambda</span> <span class="n">game</span><span class="p">:</span> <span class="n">opponent</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="s2">&quot;DTB#566&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">netplay</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+    <span class="n">ordered_matchup</span><span class="p">,</span>
+    <span class="n">stage</span>
+<span class="p">)</span>
 
-with Tree(&quot;slp/&quot;, show_progress=True) as tree:
-    tree.organize(ordering)
-</code></pre>
+<span class="k">with</span> <span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;slp/&quot;</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">tree</span><span class="p">:</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">organize</span><span class="p">(</span><span class="n">ordering</span><span class="p">)</span>
+</code></pre></div>
 <p>Any custom parser you provide will need to be a <code>Callable</code> that takes in a <code>Game</code> instance and returns a <code>str</code>.</p>
 <p>Further, you can use cascading methods to simplify your programming. Each of the methods <code>organize</code>, <code>flatten</code>, and <code>rename</code> will return a reference to the instance object on which it was called. Something like this: <code>tree.organize().rename()</code> will both organize and rename the game files.</p>
-<h4 id="flatten">Flatten</h4>
+<h4 id="flatten">Flatten<a class="headerlink" href="#flatten" title="Permanent link">&para;</a></h4>
 <p>The <code>flatten</code> method serves the simple purpose of moving each game file found (deeply or otherwise) under the root folder back to the root folder itself. Here's an example of what calling this method may look like:</p>
-<pre><code class="language-python">from treefrog import Tree
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">treefrog</span> <span class="kn">import</span> <span class="n">Tree</span>
 
-tree = Tree(&quot;slp/&quot;)
-tree.flatten().resolve()
-</code></pre>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;slp/&quot;</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+</code></pre></div>
 <p>Note that you do not have to use <code>Tree</code> with a context manager. If you do not use the <code>with</code> keyword as in the first couple of examples, you will need to end your operations with a call to the <code>resolve</code> method in order to see the changes reflected in your filesystem.</p>
-<h4 id="rename">Rename</h4>
+<h4 id="rename">Rename<a class="headerlink" href="#rename" title="Permanent link">&para;</a></h4>
 <p>The <code>rename</code> method simply renames each game file according to its attributes. Without a rename function supplied, treefrog will use the <code>default_filename</code> function found in the <code>treefrog.rename</code> module. Alternatively, you may provide your own rename function as shown below:</p>
-<pre><code class="language-python">from treefrog import Tree
-from treefrog.parse.parsers import stage, timestamp
-from treefrog.parse.utils import character_name, characters
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">treefrog</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">treefrog.parse.parsers</span> <span class="kn">import</span> <span class="n">stage</span><span class="p">,</span> <span class="n">timestamp</span>
+<span class="kn">from</span> <span class="nn">treefrog.parse.utils</span> <span class="kn">import</span> <span class="n">character_name</span><span class="p">,</span> <span class="n">characters</span>
 
-def create_filename(game: Game):
-    p1, p2 = tuple(characters(game))
-    return f&quot;{timestamp(game)} - {character_name(p1)} vs {character_name(p2)} - {stage(game)}.slp&quot;
+<span class="k">def</span> <span class="nf">create_filename</span><span class="p">(</span><span class="n">game</span><span class="p">:</span> <span class="n">Game</span><span class="p">):</span>
+    <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">characters</span><span class="p">(</span><span class="n">game</span><span class="p">))</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamp</span><span class="p">(</span><span class="n">game</span><span class="p">)</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">character_name</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">character_name</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">stage</span><span class="p">(</span><span class="n">game</span><span class="p">)</span><span class="si">}</span><span class="s2">.slp&quot;</span>
 
-with Tree(&quot;slp/&quot;) as tree:
-    tree.rename(create_filename=create_filename)
-</code></pre>
-<h3 id="command-line">Command-Line</h3>
+<span class="k">with</span> <span class="n">Tree</span><span class="p">(</span><span class="s2">&quot;slp/&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tree</span><span class="p">:</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">create_filename</span><span class="o">=</span><span class="n">create_filename</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="command-line">Command-Line<a class="headerlink" href="#command-line" title="Permanent link">&para;</a></h3>
 <p>This is also command-line program, and can be executed as follows:</p>
-<pre><code class="language-txt">python -m treefrog [-h] [-g GLOB] [-c NETPLAY_CODE] [-p] [-d] [-o | -f] [-r] root_folder
-</code></pre>
+<div class="highlight"><pre><span></span><code>python -m treefrog [-h] [-g GLOB] [-c NETPLAY_CODE] [-p] [-d] [-o | -f] [-r] root_folder
+</code></pre></div>
 <p>CLI argument usage:</p>
 <table>
 <thead>
@@ -572,10 +572,10 @@ with Tree(&quot;slp/&quot;) as tree:
 </tbody>
 </table>
 <p>For example, the following command will organize all the game files under the <code>slp</code> directory with a progress bar.</p>
-<pre><code class="language-bash">python -m treefrog &quot;slp&quot; -c &quot;DTB#566&quot; -op
-</code></pre>
+<div class="highlight"><pre><span></span><code>python -m treefrog <span class="s2">&quot;slp&quot;</span> -c <span class="s2">&quot;DTB#566&quot;</span> -op
+</code></pre></div>
 <p>Feel free to <a href="https://dawsonbooth.com/treefrog/">check out the docs</a> for more information.</p>
-<h2 id="license">License</h2>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>This software is released under the terms of <a href="LICENSE">MIT license</a>.</p>
                 
               
