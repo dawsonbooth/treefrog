@@ -15,6 +15,7 @@ from .rename import create_filename
 
 class Tree:
     root: Path
+    glob: str
     show_progress: bool
 
     sources: Tuple[Path, ...]
@@ -22,13 +23,14 @@ class Tree:
     operations: Dict[str, Callable[[Path, Game], Path]]
     should_resolve: bool
 
-    def __init__(self, root_folder: Union[str, os.PathLike[str]], show_progress: bool = False):
+    def __init__(self, root_folder: Union[str, os.PathLike[str]], glob: str = "**/*.slp", show_progress: bool = False):
         self.root = Path(root_folder)
+        self.glob = glob
         self.show_progress = show_progress
         self.reset()
 
     def reset(self) -> Tree:
-        self.sources = tuple(self.root.rglob("*.slp"))
+        self.sources = tuple(self.root.glob(self.glob))
         self.destinations = list(self.sources)
         self.operations = dict()
 

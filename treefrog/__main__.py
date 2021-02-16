@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from . import Tree
-from .cli import default_rename, flatten, netplay_code, organize, rename, root_folder, show_progress
+from .cli import default_rename, flatten, glob, netplay_code, organize, rename, root_folder, show_progress
 
 
 def main() -> int:
@@ -11,6 +11,7 @@ def main() -> int:
     )
     group = parser.add_mutually_exclusive_group()
     parser.add_argument(*root_folder["args"], **root_folder["kwargs"])
+    parser.add_argument(*glob["args"], **glob["kwargs"])
     parser.add_argument(*netplay_code["args"], **netplay_code["kwargs"])
     parser.add_argument(*show_progress["args"], **show_progress["kwargs"])
     parser.add_argument(*default_rename["args"], **default_rename["kwargs"])
@@ -27,7 +28,7 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    with Tree(args.root_folder, show_progress=args.show_progress) as tree:
+    with Tree(args.root_folder, glob=args.glob, show_progress=args.show_progress) as tree:
         if args.flatten:
             flatten(tree, args)
         if args.organize:

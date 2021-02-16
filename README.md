@@ -106,27 +106,22 @@ with Tree("slp/") as tree:
 This is also command-line program, and can be executed as follows:
 
 ```txt
-python -m treefrog [-h] [-c NETPLAY_CODE] [-p] [-d] [-o | -f] [-r] root_folder
+python -m treefrog [-h] [-g GLOB] [-c NETPLAY_CODE] [-p] [-d] [-o | -f] [-r] root_folder
 ```
 
-Positional arguments:
+CLI argument usage:
 
-```txt
-  root_folder           Slippi folder root path
-```
-
-Optional arguments:
-
-```txt
-  -h, --help            show this help message and exit
-  -c NETPLAY_CODE, --netplay-code NETPLAY_CODE
-                        Netplay code (e.g. DTB#566)
-  -p, --show-progress   Whether to show a progress bar
-  -d, --default-rename  Whether to restore the filenames to their defaults
-  -o, --organize        Whether to organize the folder hierarchy
-  -f, --flatten         Whether to flatten your Slippi game files to a shared parent folder
-  -r, --rename          Whether to rename the files according to their features
-```
+| Argument                                       | Description                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------------- |
+| `root_folder`                                  | Slippi folder root path                                             |
+| `-h, --help`                                   | show this help message and exit                                     |
+| `-g GLOB, --glob GLOB`                         | The glob pattern to search with                                     |
+| `-c NETPLAY_CODE, --netplay-code NETPLAY_CODE` | Netplay code (e.g. DTB#566)                                         |
+| `-p, --show-progress`                          | Whether to show a progress bar                                      |
+| `-d, --default-rename`                         | Whether to restore the filenames to their defaults                  |
+| `-o, --organize`                               | Whether to organize the folder hierarchy                            |
+| `-f, --flatten`                                | Whether to flatten your Slippi game files to a shared parent folder |
+| `-r, --rename`                                 | Whether to rename the files according to their features             |
 
 For example, the following command will organize all the game files under the `slp` directory with a progress bar.
 

@@ -36,6 +36,14 @@ def rename(tree: Tree, args):
 
 
 root_folder = {"args": ["root_folder"], "kwargs": {"type": Path, "help": "Slippi folder root path"}}
+glob = {
+    "args": ["-g", "--glob"],
+    "kwargs": {"type": str, "default": "**/*.slp", "help": "The glob pattern to search with"},
+}
+show_progress = {
+    "args": ["-p", "--show-progress"],
+    "kwargs": {"action": "store_true", "help": "Whether to show a progress bar"},
+}
 
 
 netplay_code = {"args": ["-c", "--netplay-code"], "kwargs": {"type": str, "help": "Netplay code (e.g. DTB#566)"}}
@@ -43,9 +51,4 @@ netplay_code = {"args": ["-c", "--netplay-code"], "kwargs": {"type": str, "help"
 default_rename = {
     "args": ["-d", "--default-rename"],
     "kwargs": {"action": "store_true", "help": "Whether to restore the filenames to their defaults"},
-}
-
-show_progress = {
-    "args": ["-p", "--show-progress"],
-    "kwargs": {"action": "store_true", "help": "Whether to show a progress bar"},
 }
