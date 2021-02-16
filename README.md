@@ -109,7 +109,7 @@ This is also command-line program, and can be executed as follows:
 python -m treefrog [-h] [-g GLOB] [-c NETPLAY_CODE] [-p] [-d] [-o | -f] [-r] root_folder
 ```
 
-CLI argument usage:
+Options:
 
 | Argument                                       | Description                                                         |
 | ---------------------------------------------- | ------------------------------------------------------------------- |
