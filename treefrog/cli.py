@@ -1,9 +1,15 @@
 from pathlib import Path
+from typing import Any, Mapping, Sequence, TypedDict
 
 from .parse.parsers import month, stage, year
 from .parse.utils import character_name, most_used_character, opponent, user
 from .rename import default_filename
 from .tree import Tree
+
+
+class CLIArgument(TypedDict):
+    name_or_flags: Sequence[str]
+    kwargs: Mapping[str, Any]
 
 
 def organize(tree: Tree, args):
@@ -35,20 +41,26 @@ def rename(tree: Tree, args):
         tree.rename()
 
 
-root_folder = {"args": ["root_folder"], "kwargs": {"type": Path, "help": "Slippi folder root path"}}
-glob = {
-    "args": ["-g", "--glob"],
+root_folder: CLIArgument = {
+    "name_or_flags": ["root_folder"],
+    "kwargs": {"type": Path, "help": "Slippi folder root path"},
+}
+glob: CLIArgument = {
+    "name_or_flags": ["-g", "--glob"],
     "kwargs": {"type": str, "default": "**/*.slp", "help": "The glob pattern to search with"},
 }
-show_progress = {
-    "args": ["-p", "--show-progress"],
+show_progress: CLIArgument = {
+    "name_or_flags": ["-p", "--show-progress"],
     "kwargs": {"action": "store_true", "help": "Whether to show a progress bar"},
 }
 
 
-netplay_code = {"args": ["-c", "--netplay-code"], "kwargs": {"type": str, "help": "Netplay code (e.g. DTB#566)"}}
+netplay_code: CLIArgument = {
+    "name_or_flags": ["-c", "--netplay-code"],
+    "kwargs": {"type": str, "help": "Netplay code (e.g. DTB#566)"},
+}
 
-default_rename = {
-    "args": ["-d", "--default-rename"],
+default_rename: CLIArgument = {
+    "name_or_flags": ["-d", "--default-rename"],
     "kwargs": {"action": "store_true", "help": "Whether to restore the filenames to their defaults"},
 }
