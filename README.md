@@ -1,11 +1,11 @@
-# `REPO_NAME`
+# `treefrog`
 
-[![pypi version](https://img.shields.io/pypi/v/PACKAGE_NAME.svg?style=flat)](https://pypi.org/pypi/PACKAGE_NAME/)
-[![downloads](https://pepy.tech/badge/PACKAGE_NAME)](https://pepy.tech/project/PACKAGE_NAME)
-[![build status](https://github.com/dawsonbooth/REPO_NAME/workflows/build/badge.svg)](https://github.com/dawsonbooth/REPO_NAME/actions?workflow=build)
-[![python versions](https://img.shields.io/pypi/pyversions/PACKAGE_NAME.svg?style=flat)](https://pypi.org/pypi/PACKAGE_NAME/)
-[![format](https://img.shields.io/pypi/format/PACKAGE_NAME.svg?style=flat)](https://pypi.org/pypi/PACKAGE_NAME/)
-[![license](https://img.shields.io/pypi/l/PACKAGE_NAME.svg?style=flat)](https://github.com/dawsonbooth/REPO_NAME/blob/master/LICENSE)
+[![pypi version](https://img.shields.io/pypi/v/treefrog.svg?style=flat)](https://pypi.org/pypi/treefrog/)
+[![downloads](https://pepy.tech/badge/treefrog)](https://pepy.tech/project/treefrog)
+[![build status](https://github.com/dawsonbooth/treefrog/workflows/build/badge.svg)](https://github.com/dawsonbooth/treefrog/actions?workflow=build)
+[![python versions](https://img.shields.io/pypi/pyversions/treefrog.svg?style=flat)](https://pypi.org/pypi/treefrog/)
+[![format](https://img.shields.io/pypi/format/treefrog.svg?style=flat)](https://pypi.org/pypi/treefrog/)
+[![license](https://img.shields.io/pypi/l/treefrog.svg?style=flat)](https://github.com/dawsonbooth/treefrog/blob/master/LICENSE)
 
 ## Description
 
@@ -16,7 +16,7 @@ Organize the Slippi game files in your filesystem according to their attributes.
 With [Python](https://www.python.org/downloads/) installed, simply run the following command to add the package to your project.
 
 ```bash
-python -m pip install PACKAGE_NAME
+python -m pip install treefrog
 ```
 
 ## Usage

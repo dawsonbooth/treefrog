@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/dawsonbooth/treefrog"
 repository = "https://github.com/dawsonbooth/treefrog"
-documentation = "https://dawsonbooth.github.io/REPO_NAME"
+documentation = "https://dawsonbooth.github.io/treefrog"
 keywords = ["filesystem", "slp", "slippi", "slippi-replays"]
 classifiers = [
     "Environment :: Console",
@@ -16,10 +16,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 include = ["LICENSE"]
-packages = [{ include = "MODULE_NAME" }]
+packages = [{ include = "treefrog" }]
 
 [tool.poetry.scripts]
-PACKAGE_NAME = "MODULE_NAME.__main__:main"
+treefrog = "treefrog.__main__:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"
@@ -47,7 +47,7 @@ profile = "black"
 line-length = 119
 
 [tool.portray]
-modules = ["MODULE_NAME"]
+modules = ["treefrog"]
 
 [[tool.portray.extra_markdown_extensions]]
 [tool.portray.extra_markdown_extensions.toc]
@@ -58,8 +58,8 @@ permalink = true
 linenums = true
 
 [tool.portray.mkdocs]
-site_name = "PACKAGE_NAME"
-site_url = "https://dawsonbooth.github.io/REPO_NAME/"
+site_name = "treefrog"
+site_url = "https://dawsonbooth.github.io/treefrog/"
 edit_uri = "blob/master/"
 
 markdown_extensions = [
