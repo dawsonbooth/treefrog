@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "treefrog"
-version = "0.6.0"
+version = "0.6.1"
 description = "Organize the Slippi game files in your filesystem according to their attributes"
 authors = ["Dawson Booth <pypi@dawsonbooth.com>"]
 license = "MIT"
