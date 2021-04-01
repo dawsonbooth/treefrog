@@ -102,6 +102,19 @@ optional = false
 python-versions = "~=3.5"
 
 [[package]]
+name = "dustpan"
+version = "0.3.2"
+description = ""
+category = "dev"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+attrs = ">=20.3.0,<21.0.0"
+colorama = ">=0.4.4,<0.5.0"
+toml = ">=0.10.2,<0.11.0"
+
+[[package]]
 name = "falcon"
 version = "2.0.0"
 description = "An unladen web framework for building APIs and app backends."
@@ -514,14 +527,6 @@ python-versions = "*"
 dev = ["Pympler (>=0.7,<0.8)", "coverage (>=4.5.3,<4.6)"]
 
 [[package]]
-name = "pyclean"
-version = "2.0.0"
-description = "Pure Python cross-platform pyclean. Clean up your Python bytecode."
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "pycodestyle"
 version = "2.6.0"
 description = "Python style guide checker"
@@ -747,7 +752,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "659a9fe50065f5cc9d596593f745926f752b07cc3a36a6f8f2151c944921b176"
+content-hash = "8055e95df19358a479bd1b62f00630684b589077502b91241e3f2935ea5180cf"
 
 [metadata.files]
 appdirs = [
@@ -786,6 +791,10 @@ colorama = [
 ]
 docstring-parser = [
     {file = "docstring_parser-0.7.3.tar.gz", hash = "sha256:cde5fbf8b846433dfbde1e0f96b7f909336a634d5df34a38cb75050c7346734a"},
+]
+dustpan = [
+    {file = "dustpan-0.3.2-py3-none-any.whl", hash = "sha256:358f613a941aae7e80595b474eace4091f484d513933ebe7d44d82f6b664f926"},
+    {file = "dustpan-0.3.2.tar.gz", hash = "sha256:b6d7d1bc96b1929a7a911fcb3a63e41d5b3b042fcaa1132ada61b0a2e99ca61e"},
 ]
 falcon = [
     {file = "falcon-2.0.0-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:733033ec80c896e30a43ab3e776856096836787197a44eb21022320a61311983"},
@@ -834,6 +843,7 @@ importlib-metadata = [
     {file = "importlib_metadata-3.7.2.tar.gz", hash = "sha256:18d5ff601069f98d5d605b6a4b50c18a34811d655c55548adc833e687289acde"},
 ]
 iniconfig = [
+    {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 invoke = [
@@ -972,10 +982,6 @@ py-slippi = [
 ]
 py-ubjson = [
     {file = "py-ubjson-0.16.1.tar.gz", hash = "sha256:b9bfb8695a1c7e3632e800fb83c943bf67ed45ddd87cd0344851610c69a5a482"},
-]
-pyclean = [
-    {file = "pyclean-2.0.0-py3-none-any.whl", hash = "sha256:ac9bb87f0fffe12acbc2292150f92ec30ca1935acf2b45e9fa24dc64efe9b379"},
-    {file = "pyclean-2.0.0.tar.gz", hash = "sha256:06e62e5a26f9b0eaebe249a1a74db17daf35c0216688b6fceb8f55f0d6eb7a40"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.6.0-py2.py3-none-any.whl", hash = "sha256:2295e7b2f6b5bd100585ebcb1f616591b652db8a741695b3d8f5d28bdc934367"},
