@@ -93,16 +93,19 @@ class Tree:
         # Move files
         paths = zip(self.sources, self.destinations)
         if self.show_progress:
-            paths = tqdm(paths, desc="Move files")
+            paths = tqdm(paths, desc="Move files", total=len(self.sources))
 
         for source, destination in paths:
             safe_move(source, destination)
 
-        # Remove empty folders
-        for path in self.root.rglob("*"):
-            if path.is_dir() and len([f for f in path.rglob("*") if not f.is_dir()]) == 0:
-                if path.exists():
-                    shutil.rmtree(path)
+        # Remove empty source folders
+        processed_folders = set()
+        for source in tqdm(self.sources):
+            parents = list(source.parents)
+            for parent in parents[parents.index(self.root) :]:
+                if parent not in processed_folders and len([f for f in parent.rglob("*") if not f.is_dir()]) == 0:
+                    shutil.rmtree(parent)
+                processed_folders.add(parent)
 
         self.reset()
 
