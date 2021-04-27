@@ -13,6 +13,30 @@ from .parse.utils import games as parse_games
 from .rename import create_filename
 
 
+def safe_move(source: Path, destination: Path) -> None:
+    if source == destination:
+        return
+
+    if not destination.parent.exists():
+        os.makedirs(destination.parent)
+        shutil.move(str(source), str(destination))
+        return
+
+    if not destination.exists():
+        shutil.move(str(source), str(destination))
+        return
+
+    stem, suffix = destination.stem, destination.suffix
+    destination = destination.parent / f"{stem} (1){suffix}"
+
+    i = 1
+    while destination.exists():
+        destination = destination.parent / f"{stem} ({i}){suffix}"
+        i += 1
+
+    shutil.move(str(source), str(destination))
+
+
 class Tree:
     root: Path
     glob: str
@@ -54,39 +78,25 @@ class Tree:
         return self
 
     def resolve(self) -> Tree:
+        # Perform operations
         games = parse_games(self.sources)
-        destinations = self.destinations
         if self.show_progress:
             games = tqdm(games, desc="Process games", total=len(self.sources))
-            destinations = tqdm(destinations, desc="Move files")
 
         for i, game in enumerate(games):
-            # Perform operations
             try:
                 for operation in self.operations.values():
                     self.destinations[i] = operation(self.destinations[i], game)
             except Exception as e:
                 self.destinations[i] = self.root / e.__class__.__name__ / self.destinations[i].name
 
-        for i, destination in enumerate(destinations):
-            # Rename if duplicate
-            num_duplicates = 0
-            new_name = destination.name
-            while True:
-                renamed = False
-                for j, other in enumerate(self.destinations):
-                    if new_name == other.name and i != j:
-                        num_duplicates += 1
-                        renamed = True
-                        new_name = f"{destination.stem} ({num_duplicates}){destination.suffix}"
+        # Move files
+        paths = zip(self.sources, self.destinations)
+        if self.show_progress:
+            paths = tqdm(paths, desc="Move files")
 
-                if not renamed:
-                    self.destinations[i] = destination.parent / new_name
-                    break
-
-            # Move file
-            os.makedirs(destination.parent, exist_ok=True)
-            shutil.move(str(self.sources[i]), str(self.destinations[i]))
+        for source, destination in paths:
+            safe_move(source, destination)
 
         # Remove empty folders
         for path in self.root.rglob("*"):
