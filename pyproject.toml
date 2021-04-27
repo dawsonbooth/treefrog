@@ -22,7 +22,7 @@ packages = [{ include = "treefrog" }]
 treefrog = "treefrog.__main__:main"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 py-slippi = "^1.6.1"
 tqdm = "^4.56.2"
 
