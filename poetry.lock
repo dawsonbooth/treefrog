@@ -158,6 +158,17 @@ python-dateutil = ">=2.8.1"
 dev = ["flake8", "markdown", "twine"]
 
 [[package]]
+name = "gibbon"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.dependencies]
+tqdm = ">=4.59.0,<5.0.0"
+
+[[package]]
 name = "gitdb"
 version = "4.0.7"
 description = "Git Object Database"
@@ -717,7 +728,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "fca5988a1965c80b191ce033d577015c3b92a8a1643b3d4dcd5144104af2e2b8"
+content-hash = "3c837af03bf2a8e6bd0a52a9f66edf86bf61d54443996033a3fce672b60e1270"
 
 [metadata.files]
 appdirs = [
@@ -786,6 +797,10 @@ future = [
 ]
 ghp-import = [
     {file = "ghp-import-1.1.0.tar.gz", hash = "sha256:c22a9ce10c37753e2688d164d765a700dae4b8d79fa6db0a2c3132ba7881894f"},
+]
+gibbon = [
+    {file = "gibbon-0.1.0-py3-none-any.whl", hash = "sha256:4d1545f8bd93fd0e7c989b288b6e5d93a7dfd3e24a133c4d3922cc780710b7e3"},
+    {file = "gibbon-0.1.0.tar.gz", hash = "sha256:a21c8da1be5e71317567a9b717ec380ae431fdfc366e5ad291a4be2e41b4899f"},
 ]
 gitdb = [
     {file = "gitdb-4.0.7-py3-none-any.whl", hash = "sha256:6c4cc71933456991da20917998acbe6cf4fb41eeaab7d6d67fbc05ecd4c865b0"},
