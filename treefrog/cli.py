@@ -25,7 +25,7 @@ def organize(tree: Tree, args):
 
         ordering = (year, month, opponent_netplay_code, ordered_matchup, stage)
 
-        tree.organize(ordering=ordering)
+        tree.organize(*ordering)
     else:
         tree.organize()
 

@@ -6,7 +6,7 @@ from typing import Callable, Optional, Union
 
 from gibbon import Tree as _Tree
 from gibbon.types import T
-from slippi.game import Game
+from slippi import Game
 
 from .organize import default_ordering
 from .rename import create_filename
