@@ -5,7 +5,7 @@ from treefrog.rename import default_filename
 
 root_folder = Path("slp")
 
-original_hierarchy = tuple(root_folder.rglob("*.slp"))
+original_hierarchy = tuple(root_folder.glob("**/*.slp"))
 
 
 def restore_hierarchy():
@@ -28,7 +28,7 @@ def test_rename():
     with Tree(root_folder) as tree:
         tree.rename()
 
-    hierarchy = tuple(root_folder.rglob("*.slp"))
+    hierarchy = tuple(root_folder.glob("**/*.slp"))
 
     assert len(hierarchy) == len(original_hierarchy)
     assert hierarchy != original_hierarchy
@@ -40,7 +40,7 @@ def test_organize():
     with Tree(root_folder) as tree:
         tree.organize()
 
-    hierarchy = tuple(root_folder.rglob("*.slp"))
+    hierarchy = tuple(root_folder.glob("**/*.slp"))
 
     assert len(hierarchy) == len(original_hierarchy)
     assert hierarchy != original_hierarchy
