@@ -25,7 +25,7 @@ treefrog = "treefrog.__main__:main"
 python = "^3.8"
 py-slippi = "^1.6.1"
 tqdm = "^4.56.2"
-gibbon = "^0.1.0"
+gibbon = "^0.1.3"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"
