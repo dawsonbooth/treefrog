@@ -1,5 +1,5 @@
 from .parsers import day, hour, matchup, minute, month, second, stage, timestamp, year
-from .utils import ParseError, Parser
+from .utils import Parser
 
 __all__ = (
     "matchup",
@@ -12,5 +12,4 @@ __all__ = (
     "minute",
     "second",
     "Parser",
-    "ParseError",
 )

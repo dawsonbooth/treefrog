@@ -1,26 +1,10 @@
-from concurrent.futures import ProcessPoolExecutor
-from pathlib import Path
-from typing import Callable, Generator, Optional, Sequence
+from typing import Callable, Generator
 
 from slippi import Game
 from slippi.id import InGameCharacter, Stage
 from slippi.metadata import Metadata
-from slippi.parse import ParseError
 
 Parser = Callable[[Game], str]
-
-
-def _game(path: Path) -> Optional[Game]:
-    try:
-        return Game(path)
-    except ParseError:
-        return None
-
-
-def games(sources: Sequence[Path]) -> Generator[Game, None, None]:
-    with ProcessPoolExecutor() as executor:
-        for game in executor.map(_game, sources):
-            yield game
 
 
 def ports(game: Game) -> Generator[int, None, None]:
